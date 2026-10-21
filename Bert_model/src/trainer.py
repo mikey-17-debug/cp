@@ -207,12 +207,18 @@ def _tune_multi_label_thresholds(
     return payload
 
 
-def run_training(config: ProjectConfig, task_key: str) -> Dict[str, float]:
+def run_training(
+    config: ProjectConfig,
+    task_key: str,
+    resume_from_checkpoint: str | Path | None = None,
+) -> Dict[str, float]:
     """执行单个任务的完整训练流程，返回测试集指标。"""
     set_seed(config.training.seed)
     task = config.task(task_key)
     logger.info("=" * 70)
     logger.info("[%s] 开始训练 | 设备 %s | 输出 %s", task_key, device_label(), config.task_output_dir(task_key))
+    if resume_from_checkpoint:
+        logger.info("[%s] 从检查点续训：%s", task_key, resume_from_checkpoint)
     logger.info("=" * 70)
 
     tokenizer = build_tokenizer(config)
@@ -265,7 +271,7 @@ def run_training(config: ProjectConfig, task_key: str) -> Dict[str, float]:
         callbacks=callbacks,
     )
 
-    trainer.train()
+    trainer.train(resume_from_checkpoint=str(resume_from_checkpoint) if resume_from_checkpoint else None)
 
     metrics: Dict[str, float] = {}
     metrics.update(trainer.evaluate(datasets["val"], metric_key_prefix="val"))
@@ -308,9 +314,18 @@ def run_training(config: ProjectConfig, task_key: str) -> Dict[str, float]:
     return metrics
 
 
-def train_all(config: ProjectConfig, task_keys) -> Dict[str, Dict[str, float]]:
-    """按顺序训练多个任务。"""
+def train_all(
+    config: ProjectConfig,
+    task_keys,
+    resume_checkpoints: Dict[str, str | Path] | None = None,
+) -> Dict[str, Dict[str, float]]:
+    """按顺序训练多个任务，可为每个任务指定续训检查点。"""
+    resume_checkpoints = resume_checkpoints or {}
     results: Dict[str, Dict[str, float]] = {}
     for task_key in task_keys:
-        results[task_key] = run_training(config, task_key)
+        results[task_key] = run_training(
+            config,
+            task_key,
+            resume_from_checkpoint=resume_checkpoints.get(task_key),
+        )
     return results

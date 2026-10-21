@@ -1,0 +1,243 @@
+2026-10-21 16:23:17 | INFO    | main | 配置文件：E:\Study\NLPLearn\P1\cp\Bert_model\config_zh_balance.yaml
+2026-10-21 16:23:17 | INFO    | main | 训练数据：E:\Study\NLPLearn\P1\cp\original_file\data_balance.tsv
+2026-10-21 16:23:17 | INFO    | main | 预训练模型：E:\Study\NLPLearn\NLP_learn10_12\PretrainedModel\chinese-bert-wwm
+2026-10-21 16:23:17 | INFO    | main | 输出目录：E:\Study\NLPLearn\P1\model_zh_balance
+2026-10-21 16:23:17 | INFO    | main | 设备：cuda:0 (NVIDIA GeForce RTX 4070 Laptop GPU)
+2026-10-21 16:23:17 | INFO    | main | 续训检查点：{'single': 'E:\\Study\\NLPLearn\\P1\\model_zh_balance\\single_label\\checkpoint-39864'}
+2026-10-21 16:23:17 | INFO    | src.trainer | ======================================================================
+2026-10-21 16:23:17 | INFO    | src.trainer | [single] 开始训练 | 设备 cuda:0 (NVIDIA GeForce RTX 4070 Laptop GPU) | 输出 E:\Study\NLPLearn\P1\model_zh_balance\single_label
+2026-10-21 16:23:17 | INFO    | src.trainer | [single] 从检查点续训：E:\Study\NLPLearn\P1\model_zh_balance\single_label\checkpoint-39864
+2026-10-21 16:23:17 | INFO    | src.trainer | ======================================================================
+2026-10-21 16:23:17 | INFO    | src.data | 分词器：BertTokenizer（词表 21128）
+2026-10-21 16:23:19 | INFO    | src.data | 按 (文本, 标签) 去重：100000 -> 99733
+2026-10-21 16:23:19 | INFO    | src.data | 剔除跨类别冲突文本：37 条文本 / 99733 行 -> 99658 行
+2026-10-21 16:23:19 | INFO    | src.data | 载入影片样本 99658 条（文本列=summary，标签列=genre）
+2026-10-21 16:23:19 | INFO    | src.data | 标签空间 10 个（阈值 10，排除 0 个格式类）；剔除低频类型 0 个：无
+2026-10-21 16:23:19 | INFO    | src.data | 影片级切分：train=79726, val=9966, test=9966
+2026-10-21 16:23:19 | INFO    | src.data | [single] 样本量：train=79726, val=9966, test=9966, 标签数=10
+2026-10-21 16:23:20 | INFO    | src.data | [single] 训练/验证/测试集已写回 E:\Study\NLPLearn\P1\cp\Bert_model\dataset\zh_balance_splits\single_label
+2026-10-21 16:23:45 | INFO    | src.model | 加载预训练模型 chinese-bert-wwm：num_labels=10, problem_type=single_label_classification, 新增分类头将随机初始化
+2026-10-21 16:23:45 | INFO    | src.trainer | [single] 训练参数：epochs=12, batch=16, lr=2e-05, warmup_steps=5979, max_length=384
+2026-10-21 16:23:45 | INFO    | src.trainer | [single] 早停已启用：连续 3 轮 macro_f1 无提升即停止
+2026-10-21 16:23:56 | INFO    | src.trainer | [进度] step 39900/59796 | epoch 8.01 | loss 0.0144 | lr 7.39e-06
+2026-10-21 16:24:18 | INFO    | src.trainer | [进度] step 40000/59796 | epoch 8.03 | loss 0.0365 | lr 7.36e-06
+2026-10-21 16:24:39 | INFO    | src.trainer | [进度] step 40100/59796 | epoch 8.05 | loss 0.0468 | lr 7.32e-06
+2026-10-21 16:25:00 | INFO    | src.trainer | [进度] step 40200/59796 | epoch 8.07 | loss 0.0419 | lr 7.28e-06
+2026-10-21 16:25:20 | INFO    | src.trainer | [进度] step 40300/59796 | epoch 8.09 | loss 0.0289 | lr 7.25e-06
+2026-10-21 16:25:40 | INFO    | src.trainer | [进度] step 40400/59796 | epoch 8.11 | loss 0.0264 | lr 7.21e-06
+2026-10-21 16:26:00 | INFO    | src.trainer | [进度] step 40500/59796 | epoch 8.13 | loss 0.0606 | lr 7.17e-06
+2026-10-21 16:26:20 | INFO    | src.trainer | [进度] step 40600/59796 | epoch 8.15 | loss 0.0518 | lr 7.13e-06
+2026-10-21 16:26:41 | INFO    | src.trainer | [进度] step 40700/59796 | epoch 8.17 | loss 0.0639 | lr 7.1e-06
+2026-10-21 16:27:01 | INFO    | src.trainer | [进度] step 40800/59796 | epoch 8.19 | loss 0.0365 | lr 7.06e-06
+2026-10-21 16:27:21 | INFO    | src.trainer | [进度] step 40900/59796 | epoch 8.21 | loss 0.0358 | lr 7.02e-06
+2026-10-21 16:27:41 | INFO    | src.trainer | [进度] step 41000/59796 | epoch 8.23 | loss 0.0493 | lr 6.99e-06
+2026-10-21 16:28:02 | INFO    | src.trainer | [进度] step 41100/59796 | epoch 8.25 | loss 0.0505 | lr 6.95e-06
+2026-10-21 16:28:23 | INFO    | src.trainer | [进度] step 41200/59796 | epoch 8.27 | loss 0.0242 | lr 6.91e-06
+2026-10-21 16:28:44 | INFO    | src.trainer | [进度] step 41300/59796 | epoch 8.29 | loss 0.0372 | lr 6.87e-06
+2026-10-21 16:29:05 | INFO    | src.trainer | [进度] step 41400/59796 | epoch 8.31 | loss 0.0351 | lr 6.84e-06
+2026-10-21 16:29:27 | INFO    | src.trainer | [进度] step 41500/59796 | epoch 8.33 | loss 0.0379 | lr 6.8e-06
+2026-10-21 16:29:48 | INFO    | src.trainer | [进度] step 41600/59796 | epoch 8.35 | loss 0.0626 | lr 6.76e-06
+2026-10-21 16:30:08 | INFO    | src.trainer | [进度] step 41700/59796 | epoch 8.37 | loss 0.0492 | lr 6.73e-06
+2026-10-21 16:30:29 | INFO    | src.trainer | [进度] step 41800/59796 | epoch 8.39 | loss 0.0313 | lr 6.69e-06
+2026-10-21 16:30:50 | INFO    | src.trainer | [进度] step 41900/59796 | epoch 8.41 | loss 0.0468 | lr 6.65e-06
+2026-10-21 16:31:11 | INFO    | src.trainer | [进度] step 42000/59796 | epoch 8.43 | loss 0.0284 | lr 6.61e-06
+2026-10-21 16:31:31 | INFO    | src.trainer | [进度] step 42100/59796 | epoch 8.45 | loss 0.0367 | lr 6.58e-06
+2026-10-21 16:31:52 | INFO    | src.trainer | [进度] step 42200/59796 | epoch 8.47 | loss 0.0277 | lr 6.54e-06
+2026-10-21 16:32:12 | INFO    | src.trainer | [进度] step 42300/59796 | epoch 8.49 | loss 0.0492 | lr 6.5e-06
+2026-10-21 16:32:33 | INFO    | src.trainer | [进度] step 42400/59796 | epoch 8.51 | loss 0.0382 | lr 6.47e-06
+2026-10-21 16:32:53 | INFO    | src.trainer | [进度] step 42500/59796 | epoch 8.53 | loss 0.0519 | lr 6.43e-06
+2026-10-21 16:33:14 | INFO    | src.trainer | [进度] step 42600/59796 | epoch 8.55 | loss 0.0427 | lr 6.39e-06
+2026-10-21 16:33:35 | INFO    | src.trainer | [进度] step 42700/59796 | epoch 8.57 | loss 0.0574 | lr 6.35e-06
+2026-10-21 16:33:55 | INFO    | src.trainer | [进度] step 42800/59796 | epoch 8.59 | loss 0.0564 | lr 6.32e-06
+2026-10-21 16:34:16 | INFO    | src.trainer | [进度] step 42900/59796 | epoch 8.61 | loss 0.0300 | lr 6.28e-06
+2026-10-21 16:34:37 | INFO    | src.trainer | [进度] step 43000/59796 | epoch 8.63 | loss 0.0281 | lr 6.24e-06
+2026-10-21 16:34:57 | INFO    | src.trainer | [进度] step 43100/59796 | epoch 8.65 | loss 0.0512 | lr 6.21e-06
+2026-10-21 16:35:18 | INFO    | src.trainer | [进度] step 43200/59796 | epoch 8.67 | loss 0.0370 | lr 6.17e-06
+2026-10-21 16:35:39 | INFO    | src.trainer | [进度] step 43300/59796 | epoch 8.69 | loss 0.0183 | lr 6.13e-06
+2026-10-21 16:36:00 | INFO    | src.trainer | [进度] step 43400/59796 | epoch 8.71 | loss 0.0325 | lr 6.09e-06
+2026-10-21 16:36:22 | INFO    | src.trainer | [进度] step 43500/59796 | epoch 8.73 | loss 0.0370 | lr 6.06e-06
+2026-10-21 16:36:43 | INFO    | src.trainer | [进度] step 43600/59796 | epoch 8.75 | loss 0.0321 | lr 6.02e-06
+2026-10-21 16:37:05 | INFO    | src.trainer | [进度] step 43700/59796 | epoch 8.77 | loss 0.0579 | lr 5.98e-06
+2026-10-21 16:37:26 | INFO    | src.trainer | [进度] step 43800/59796 | epoch 8.79 | loss 0.0378 | lr 5.94e-06
+2026-10-21 16:37:47 | INFO    | src.trainer | [进度] step 43900/59796 | epoch 8.81 | loss 0.0585 | lr 5.91e-06
+2026-10-21 16:38:08 | INFO    | src.trainer | [进度] step 44000/59796 | epoch 8.83 | loss 0.0508 | lr 5.87e-06
+2026-10-21 16:38:29 | INFO    | src.trainer | [进度] step 44100/59796 | epoch 8.85 | loss 0.0448 | lr 5.83e-06
+2026-10-21 16:38:50 | INFO    | src.trainer | [进度] step 44200/59796 | epoch 8.87 | loss 0.0413 | lr 5.8e-06
+2026-10-21 16:39:10 | INFO    | src.trainer | [进度] step 44300/59796 | epoch 8.89 | loss 0.0453 | lr 5.76e-06
+2026-10-21 16:39:31 | INFO    | src.trainer | [进度] step 44400/59796 | epoch 8.91 | loss 0.0598 | lr 5.72e-06
+2026-10-21 16:39:51 | INFO    | src.trainer | [进度] step 44500/59796 | epoch 8.93 | loss 0.0481 | lr 5.68e-06
+2026-10-21 16:40:12 | INFO    | src.trainer | [进度] step 44600/59796 | epoch 8.95 | loss 0.0444 | lr 5.65e-06
+2026-10-21 16:40:32 | INFO    | src.trainer | [进度] step 44700/59796 | epoch 8.97 | loss 0.0370 | lr 5.61e-06
+2026-10-21 16:40:52 | INFO    | src.trainer | [进度] step 44800/59796 | epoch 8.99 | loss 0.0514 | lr 5.57e-06
+2026-10-21 16:41:39 | INFO    | src.trainer | [验证] epoch 9.00 | eval_loss=0.8445 | eval_accuracy=0.8864 | eval_macro_f1=0.8855 | eval_weighted_f1=0.8857 | eval_top3_accuracy=0.9738 | eval_runtime=36.8162 | eval_samples_per_second=270.6960 | eval_steps_per_second=8.4750 | epoch=9.0000
+2026-10-21 16:41:51 | INFO    | src.trainer | [进度] step 44900/59796 | epoch 9.01 | loss 0.0095 | lr 5.54e-06
+2026-10-21 16:42:12 | INFO    | src.trainer | [进度] step 45000/59796 | epoch 9.03 | loss 0.0309 | lr 5.5e-06
+2026-10-21 16:42:33 | INFO    | src.trainer | [进度] step 45100/59796 | epoch 9.05 | loss 0.0273 | lr 5.46e-06
+2026-10-21 16:42:53 | INFO    | src.trainer | [进度] step 45200/59796 | epoch 9.07 | loss 0.0309 | lr 5.42e-06
+2026-10-21 16:43:14 | INFO    | src.trainer | [进度] step 45300/59796 | epoch 9.09 | loss 0.0289 | lr 5.39e-06
+2026-10-21 16:43:34 | INFO    | src.trainer | [进度] step 45400/59796 | epoch 9.11 | loss 0.0225 | lr 5.35e-06
+2026-10-21 16:43:55 | INFO    | src.trainer | [进度] step 45500/59796 | epoch 9.13 | loss 0.0173 | lr 5.31e-06
+2026-10-21 16:44:16 | INFO    | src.trainer | [进度] step 45600/59796 | epoch 9.15 | loss 0.0325 | lr 5.28e-06
+2026-10-21 16:44:36 | INFO    | src.trainer | [进度] step 45700/59796 | epoch 9.17 | loss 0.0340 | lr 5.24e-06
+2026-10-21 16:44:57 | INFO    | src.trainer | [进度] step 45800/59796 | epoch 9.19 | loss 0.0338 | lr 5.2e-06
+2026-10-21 16:45:17 | INFO    | src.trainer | [进度] step 45900/59796 | epoch 9.21 | loss 0.0214 | lr 5.16e-06
+2026-10-21 16:45:37 | INFO    | src.trainer | [进度] step 46000/59796 | epoch 9.23 | loss 0.0363 | lr 5.13e-06
+2026-10-21 16:45:58 | INFO    | src.trainer | [进度] step 46100/59796 | epoch 9.25 | loss 0.0371 | lr 5.09e-06
+2026-10-21 16:46:18 | INFO    | src.trainer | [进度] step 46200/59796 | epoch 9.27 | loss 0.0230 | lr 5.05e-06
+2026-10-21 16:46:38 | INFO    | src.trainer | [进度] step 46300/59796 | epoch 9.29 | loss 0.0392 | lr 5.02e-06
+2026-10-21 16:46:58 | INFO    | src.trainer | [进度] step 46400/59796 | epoch 9.31 | loss 0.0366 | lr 4.98e-06
+2026-10-21 16:47:19 | INFO    | src.trainer | [进度] step 46500/59796 | epoch 9.33 | loss 0.0251 | lr 4.94e-06
+2026-10-21 16:47:39 | INFO    | src.trainer | [进度] step 46600/59796 | epoch 9.35 | loss 0.0131 | lr 4.9e-06
+2026-10-21 16:47:59 | INFO    | src.trainer | [进度] step 46700/59796 | epoch 9.37 | loss 0.0237 | lr 4.87e-06
+2026-10-21 16:48:19 | INFO    | src.trainer | [进度] step 46800/59796 | epoch 9.39 | loss 0.0419 | lr 4.83e-06
+2026-10-21 16:48:39 | INFO    | src.trainer | [进度] step 46900/59796 | epoch 9.41 | loss 0.0446 | lr 4.79e-06
+2026-10-21 16:48:59 | INFO    | src.trainer | [进度] step 47000/59796 | epoch 9.43 | loss 0.0105 | lr 4.76e-06
+2026-10-21 16:49:19 | INFO    | src.trainer | [进度] step 47100/59796 | epoch 9.45 | loss 0.0411 | lr 4.72e-06
+2026-10-21 16:49:40 | INFO    | src.trainer | [进度] step 47200/59796 | epoch 9.47 | loss 0.0371 | lr 4.68e-06
+2026-10-21 16:50:00 | INFO    | src.trainer | [进度] step 47300/59796 | epoch 9.49 | loss 0.0251 | lr 4.64e-06
+2026-10-21 16:50:20 | INFO    | src.trainer | [进度] step 47400/59796 | epoch 9.51 | loss 0.0270 | lr 4.61e-06
+2026-10-21 16:50:40 | INFO    | src.trainer | [进度] step 47500/59796 | epoch 9.53 | loss 0.0251 | lr 4.57e-06
+2026-10-21 16:51:00 | INFO    | src.trainer | [进度] step 47600/59796 | epoch 9.55 | loss 0.0249 | lr 4.53e-06
+2026-10-21 16:51:20 | INFO    | src.trainer | [进度] step 47700/59796 | epoch 9.57 | loss 0.0254 | lr 4.5e-06
+2026-10-21 16:51:41 | INFO    | src.trainer | [进度] step 47800/59796 | epoch 9.59 | loss 0.0215 | lr 4.46e-06
+2026-10-21 16:52:01 | INFO    | src.trainer | [进度] step 47900/59796 | epoch 9.61 | loss 0.0202 | lr 4.42e-06
+2026-10-21 16:52:21 | INFO    | src.trainer | [进度] step 48000/59796 | epoch 9.63 | loss 0.0261 | lr 4.38e-06
+2026-10-21 16:52:41 | INFO    | src.trainer | [进度] step 48100/59796 | epoch 9.65 | loss 0.0379 | lr 4.35e-06
+2026-10-21 16:53:01 | INFO    | src.trainer | [进度] step 48200/59796 | epoch 9.67 | loss 0.0200 | lr 4.31e-06
+2026-10-21 16:53:22 | INFO    | src.trainer | [进度] step 48300/59796 | epoch 9.69 | loss 0.0209 | lr 4.27e-06
+2026-10-21 16:53:42 | INFO    | src.trainer | [进度] step 48400/59796 | epoch 9.71 | loss 0.0290 | lr 4.24e-06
+2026-10-21 16:54:02 | INFO    | src.trainer | [进度] step 48500/59796 | epoch 9.73 | loss 0.0297 | lr 4.2e-06
+2026-10-21 16:54:23 | INFO    | src.trainer | [进度] step 48600/59796 | epoch 9.75 | loss 0.0235 | lr 4.16e-06
+2026-10-21 16:54:44 | INFO    | src.trainer | [进度] step 48700/59796 | epoch 9.77 | loss 0.0358 | lr 4.12e-06
+2026-10-21 16:55:07 | INFO    | src.trainer | [进度] step 48800/59796 | epoch 9.79 | loss 0.0286 | lr 4.09e-06
+2026-10-21 16:55:29 | INFO    | src.trainer | [进度] step 48900/59796 | epoch 9.81 | loss 0.0287 | lr 4.05e-06
+2026-10-21 16:55:51 | INFO    | src.trainer | [进度] step 49000/59796 | epoch 9.83 | loss 0.0181 | lr 4.01e-06
+2026-10-21 16:56:13 | INFO    | src.trainer | [进度] step 49100/59796 | epoch 9.85 | loss 0.0233 | lr 3.98e-06
+2026-10-21 16:56:34 | INFO    | src.trainer | [进度] step 49200/59796 | epoch 9.87 | loss 0.0205 | lr 3.94e-06
+2026-10-21 16:56:54 | INFO    | src.trainer | [进度] step 49300/59796 | epoch 9.89 | loss 0.0091 | lr 3.9e-06
+2026-10-21 16:57:14 | INFO    | src.trainer | [进度] step 49400/59796 | epoch 9.91 | loss 0.0185 | lr 3.86e-06
+2026-10-21 16:57:34 | INFO    | src.trainer | [进度] step 49500/59796 | epoch 9.93 | loss 0.0348 | lr 3.83e-06
+2026-10-21 16:57:55 | INFO    | src.trainer | [进度] step 49600/59796 | epoch 9.95 | loss 0.0353 | lr 3.79e-06
+2026-10-21 16:58:16 | INFO    | src.trainer | [进度] step 49700/59796 | epoch 9.97 | loss 0.0353 | lr 3.75e-06
+2026-10-21 16:58:36 | INFO    | src.trainer | [进度] step 49800/59796 | epoch 9.99 | loss 0.0353 | lr 3.72e-06
+2026-10-21 16:59:19 | INFO    | src.trainer | [验证] epoch 10.00 | eval_loss=0.8841 | eval_accuracy=0.8901 | eval_macro_f1=0.8903 | eval_weighted_f1=0.8904 | eval_top3_accuracy=0.9731 | eval_runtime=37.1203 | eval_samples_per_second=268.4780 | eval_steps_per_second=8.4050 | epoch=10.0000
+2026-10-21 16:59:35 | INFO    | src.trainer | [进度] step 49900/59796 | epoch 10.01 | loss 0.0132 | lr 3.68e-06
+2026-10-21 16:59:56 | INFO    | src.trainer | [进度] step 50000/59796 | epoch 10.03 | loss 0.0231 | lr 3.64e-06
+2026-10-21 17:00:16 | INFO    | src.trainer | [进度] step 50100/59796 | epoch 10.05 | loss 0.0158 | lr 3.6e-06
+2026-10-21 17:00:36 | INFO    | src.trainer | [进度] step 50200/59796 | epoch 10.07 | loss 0.0072 | lr 3.57e-06
+2026-10-21 17:00:57 | INFO    | src.trainer | [进度] step 50300/59796 | epoch 10.09 | loss 0.0151 | lr 3.53e-06
+2026-10-21 17:01:17 | INFO    | src.trainer | [进度] step 50400/59796 | epoch 10.11 | loss 0.0154 | lr 3.49e-06
+2026-10-21 17:01:38 | INFO    | src.trainer | [进度] step 50500/59796 | epoch 10.13 | loss 0.0175 | lr 3.46e-06
+2026-10-21 17:01:59 | INFO    | src.trainer | [进度] step 50600/59796 | epoch 10.15 | loss 0.0187 | lr 3.42e-06
+2026-10-21 17:02:19 | INFO    | src.trainer | [进度] step 50700/59796 | epoch 10.17 | loss 0.0162 | lr 3.38e-06
+2026-10-21 17:02:40 | INFO    | src.trainer | [进度] step 50800/59796 | epoch 10.19 | loss 0.0038 | lr 3.34e-06
+2026-10-21 17:03:00 | INFO    | src.trainer | [进度] step 50900/59796 | epoch 10.21 | loss 0.0120 | lr 3.31e-06
+2026-10-21 17:03:21 | INFO    | src.trainer | [进度] step 51000/59796 | epoch 10.23 | loss 0.0153 | lr 3.27e-06
+2026-10-21 17:03:42 | INFO    | src.trainer | [进度] step 51100/59796 | epoch 10.25 | loss 0.0077 | lr 3.23e-06
+2026-10-21 17:04:02 | INFO    | src.trainer | [进度] step 51200/59796 | epoch 10.27 | loss 0.0197 | lr 3.19e-06
+2026-10-21 17:04:22 | INFO    | src.trainer | [进度] step 51300/59796 | epoch 10.30 | loss 0.0158 | lr 3.16e-06
+2026-10-21 17:04:43 | INFO    | src.trainer | [进度] step 51400/59796 | epoch 10.32 | loss 0.0300 | lr 3.12e-06
+2026-10-21 17:05:03 | INFO    | src.trainer | [进度] step 51500/59796 | epoch 10.34 | loss 0.0120 | lr 3.08e-06
+2026-10-21 17:05:24 | INFO    | src.trainer | [进度] step 51600/59796 | epoch 10.36 | loss 0.0212 | lr 3.05e-06
+2026-10-21 17:05:44 | INFO    | src.trainer | [进度] step 51700/59796 | epoch 10.38 | loss 0.0102 | lr 3.01e-06
+2026-10-21 17:06:05 | INFO    | src.trainer | [进度] step 51800/59796 | epoch 10.40 | loss 0.0084 | lr 2.97e-06
+2026-10-21 17:06:25 | INFO    | src.trainer | [进度] step 51900/59796 | epoch 10.42 | loss 0.0239 | lr 2.93e-06
+2026-10-21 17:06:46 | INFO    | src.trainer | [进度] step 52000/59796 | epoch 10.44 | loss 0.0091 | lr 2.9e-06
+2026-10-21 17:07:06 | INFO    | src.trainer | [进度] step 52100/59796 | epoch 10.46 | loss 0.0186 | lr 2.86e-06
+2026-10-21 17:07:27 | INFO    | src.trainer | [进度] step 52200/59796 | epoch 10.48 | loss 0.0064 | lr 2.82e-06
+2026-10-21 17:07:48 | INFO    | src.trainer | [进度] step 52300/59796 | epoch 10.50 | loss 0.0268 | lr 2.79e-06
+2026-10-21 17:08:10 | INFO    | src.trainer | [进度] step 52400/59796 | epoch 10.52 | loss 0.0205 | lr 2.75e-06
+2026-10-21 17:08:31 | INFO    | src.trainer | [进度] step 52500/59796 | epoch 10.54 | loss 0.0105 | lr 2.71e-06
+2026-10-21 17:08:51 | INFO    | src.trainer | [进度] step 52600/59796 | epoch 10.56 | loss 0.0188 | lr 2.67e-06
+2026-10-21 17:09:12 | INFO    | src.trainer | [进度] step 52700/59796 | epoch 10.58 | loss 0.0049 | lr 2.64e-06
+2026-10-21 17:09:33 | INFO    | src.trainer | [进度] step 52800/59796 | epoch 10.60 | loss 0.0040 | lr 2.6e-06
+2026-10-21 17:09:54 | INFO    | src.trainer | [进度] step 52900/59796 | epoch 10.62 | loss 0.0070 | lr 2.56e-06
+2026-10-21 17:10:15 | INFO    | src.trainer | [进度] step 53000/59796 | epoch 10.64 | loss 0.0109 | lr 2.53e-06
+2026-10-21 17:10:36 | INFO    | src.trainer | [进度] step 53100/59796 | epoch 10.66 | loss 0.0069 | lr 2.49e-06
+2026-10-21 17:10:57 | INFO    | src.trainer | [进度] step 53200/59796 | epoch 10.68 | loss 0.0129 | lr 2.45e-06
+2026-10-21 17:11:18 | INFO    | src.trainer | [进度] step 53300/59796 | epoch 10.70 | loss 0.0191 | lr 2.41e-06
+2026-10-21 17:11:39 | INFO    | src.trainer | [进度] step 53400/59796 | epoch 10.72 | loss 0.0090 | lr 2.38e-06
+2026-10-21 17:11:59 | INFO    | src.trainer | [进度] step 53500/59796 | epoch 10.74 | loss 0.0149 | lr 2.34e-06
+2026-10-21 17:12:20 | INFO    | src.trainer | [进度] step 53600/59796 | epoch 10.76 | loss 0.0225 | lr 2.3e-06
+2026-10-21 17:12:41 | INFO    | src.trainer | [进度] step 53700/59796 | epoch 10.78 | loss 0.0117 | lr 2.27e-06
+2026-10-21 17:13:02 | INFO    | src.trainer | [进度] step 53800/59796 | epoch 10.80 | loss 0.0164 | lr 2.23e-06
+2026-10-21 17:13:22 | INFO    | src.trainer | [进度] step 53900/59796 | epoch 10.82 | loss 0.0186 | lr 2.19e-06
+2026-10-21 17:13:43 | INFO    | src.trainer | [进度] step 54000/59796 | epoch 10.84 | loss 0.0093 | lr 2.15e-06
+2026-10-21 17:14:03 | INFO    | src.trainer | [进度] step 54100/59796 | epoch 10.86 | loss 0.0273 | lr 2.12e-06
+2026-10-21 17:14:23 | INFO    | src.trainer | [进度] step 54200/59796 | epoch 10.88 | loss 0.0121 | lr 2.08e-06
+2026-10-21 17:14:44 | INFO    | src.trainer | [进度] step 54300/59796 | epoch 10.90 | loss 0.0192 | lr 2.04e-06
+2026-10-21 17:15:05 | INFO    | src.trainer | [进度] step 54400/59796 | epoch 10.92 | loss 0.0128 | lr 2.01e-06
+2026-10-21 17:15:26 | INFO    | src.trainer | [进度] step 54500/59796 | epoch 10.94 | loss 0.0121 | lr 1.97e-06
+2026-10-21 17:15:46 | INFO    | src.trainer | [进度] step 54600/59796 | epoch 10.96 | loss 0.0128 | lr 1.93e-06
+2026-10-21 17:16:07 | INFO    | src.trainer | [进度] step 54700/59796 | epoch 10.98 | loss 0.0061 | lr 1.89e-06
+2026-10-21 17:16:28 | INFO    | src.trainer | [进度] step 54800/59796 | epoch 11.00 | loss 0.0196 | lr 1.86e-06
+2026-10-21 17:17:07 | INFO    | src.trainer | [验证] epoch 11.00 | eval_loss=0.8965 | eval_accuracy=0.8937 | eval_macro_f1=0.8926 | eval_weighted_f1=0.8927 | eval_top3_accuracy=0.9733 | eval_runtime=37.0261 | eval_samples_per_second=269.1610 | eval_steps_per_second=8.4260 | epoch=11.0000
+2026-10-21 17:17:26 | INFO    | src.trainer | [进度] step 54900/59796 | epoch 11.02 | loss 0.0010 | lr 1.82e-06
+2026-10-21 17:17:47 | INFO    | src.trainer | [进度] step 55000/59796 | epoch 11.04 | loss 0.0197 | lr 1.78e-06
+2026-10-21 17:18:07 | INFO    | src.trainer | [进度] step 55100/59796 | epoch 11.06 | loss 0.0019 | lr 1.75e-06
+2026-10-21 17:18:28 | INFO    | src.trainer | [进度] step 55200/59796 | epoch 11.08 | loss 0.0037 | lr 1.71e-06
+2026-10-21 17:18:49 | INFO    | src.trainer | [进度] step 55300/59796 | epoch 11.10 | loss 0.0092 | lr 1.67e-06
+2026-10-21 17:19:10 | INFO    | src.trainer | [进度] step 55400/59796 | epoch 11.12 | loss 0.0090 | lr 1.63e-06
+2026-10-21 17:19:30 | INFO    | src.trainer | [进度] step 55500/59796 | epoch 11.14 | loss 0.0011 | lr 1.6e-06
+2026-10-21 17:19:51 | INFO    | src.trainer | [进度] step 55600/59796 | epoch 11.16 | loss 0.0009 | lr 1.56e-06
+2026-10-21 17:20:11 | INFO    | src.trainer | [进度] step 55700/59796 | epoch 11.18 | loss 0.0067 | lr 1.52e-06
+2026-10-21 17:20:31 | INFO    | src.trainer | [进度] step 55800/59796 | epoch 11.20 | loss 0.0070 | lr 1.49e-06
+2026-10-21 17:20:51 | INFO    | src.trainer | [进度] step 55900/59796 | epoch 11.22 | loss 0.0110 | lr 1.45e-06
+2026-10-21 17:21:11 | INFO    | src.trainer | [进度] step 56000/59796 | epoch 11.24 | loss 0.0099 | lr 1.41e-06
+2026-10-21 17:21:32 | INFO    | src.trainer | [进度] step 56100/59796 | epoch 11.26 | loss 0.0102 | lr 1.37e-06
+2026-10-21 17:21:52 | INFO    | src.trainer | [进度] step 56200/59796 | epoch 11.28 | loss 0.0038 | lr 1.34e-06
+2026-10-21 17:22:12 | INFO    | src.trainer | [进度] step 56300/59796 | epoch 11.30 | loss 0.0102 | lr 1.3e-06
+2026-10-21 17:22:32 | INFO    | src.trainer | [进度] step 56400/59796 | epoch 11.32 | loss 0.0074 | lr 1.26e-06
+2026-10-21 17:22:53 | INFO    | src.trainer | [进度] step 56500/59796 | epoch 11.34 | loss 0.0062 | lr 1.23e-06
+2026-10-21 17:23:13 | INFO    | src.trainer | [进度] step 56600/59796 | epoch 11.36 | loss 0.0194 | lr 1.19e-06
+2026-10-21 17:23:33 | INFO    | src.trainer | [进度] step 56700/59796 | epoch 11.38 | loss 0.0112 | lr 1.15e-06
+2026-10-21 17:23:54 | INFO    | src.trainer | [进度] step 56800/59796 | epoch 11.40 | loss 0.0055 | lr 1.11e-06
+2026-10-21 17:24:14 | INFO    | src.trainer | [进度] step 56900/59796 | epoch 11.42 | loss 0.0055 | lr 1.08e-06
+2026-10-21 17:24:35 | INFO    | src.trainer | [进度] step 57000/59796 | epoch 11.44 | loss 0.0033 | lr 1.04e-06
+2026-10-21 17:24:55 | INFO    | src.trainer | [进度] step 57100/59796 | epoch 11.46 | loss 0.0125 | lr 1e-06
+2026-10-21 17:25:15 | INFO    | src.trainer | [进度] step 57200/59796 | epoch 11.48 | loss 0.0031 | lr 9.65e-07
+2026-10-21 17:25:35 | INFO    | src.trainer | [进度] step 57300/59796 | epoch 11.50 | loss 0.0031 | lr 9.28e-07
+2026-10-21 17:25:56 | INFO    | src.trainer | [进度] step 57400/59796 | epoch 11.52 | loss 0.0228 | lr 8.91e-07
+2026-10-21 17:26:16 | INFO    | src.trainer | [进度] step 57500/59796 | epoch 11.54 | loss 0.0097 | lr 8.54e-07
+2026-10-21 17:26:37 | INFO    | src.trainer | [进度] step 57600/59796 | epoch 11.56 | loss 0.0027 | lr 8.16e-07
+2026-10-21 17:26:57 | INFO    | src.trainer | [进度] step 57700/59796 | epoch 11.58 | loss 0.0080 | lr 7.79e-07
+2026-10-21 17:27:18 | INFO    | src.trainer | [进度] step 57800/59796 | epoch 11.60 | loss 0.0012 | lr 7.42e-07
+2026-10-21 17:27:39 | INFO    | src.trainer | [进度] step 57900/59796 | epoch 11.62 | loss 0.0084 | lr 7.05e-07
+2026-10-21 17:27:59 | INFO    | src.trainer | [进度] step 58000/59796 | epoch 11.64 | loss 0.0094 | lr 6.68e-07
+2026-10-21 17:28:20 | INFO    | src.trainer | [进度] step 58100/59796 | epoch 11.66 | loss 0.0052 | lr 6.31e-07
+2026-10-21 17:28:40 | INFO    | src.trainer | [进度] step 58200/59796 | epoch 11.68 | loss 0.0054 | lr 5.93e-07
+2026-10-21 17:29:00 | INFO    | src.trainer | [进度] step 58300/59796 | epoch 11.70 | loss 0.0060 | lr 5.56e-07
+2026-10-21 17:29:21 | INFO    | src.trainer | [进度] step 58400/59796 | epoch 11.72 | loss 0.0035 | lr 5.19e-07
+2026-10-21 17:29:41 | INFO    | src.trainer | [进度] step 58500/59796 | epoch 11.74 | loss 0.0036 | lr 4.82e-07
+2026-10-21 17:30:01 | INFO    | src.trainer | [进度] step 58600/59796 | epoch 11.76 | loss 0.0048 | lr 4.45e-07
+2026-10-21 17:30:21 | INFO    | src.trainer | [进度] step 58700/59796 | epoch 11.78 | loss 0.0027 | lr 4.08e-07
+2026-10-21 17:30:42 | INFO    | src.trainer | [进度] step 58800/59796 | epoch 11.80 | loss 0.0116 | lr 3.71e-07
+2026-10-21 17:31:02 | INFO    | src.trainer | [进度] step 58900/59796 | epoch 11.82 | loss 0.0041 | lr 3.33e-07
+2026-10-21 17:31:22 | INFO    | src.trainer | [进度] step 59000/59796 | epoch 11.84 | loss 0.0071 | lr 2.96e-07
+2026-10-21 17:31:42 | INFO    | src.trainer | [进度] step 59100/59796 | epoch 11.86 | loss 0.0132 | lr 2.59e-07
+2026-10-21 17:32:03 | INFO    | src.trainer | [进度] step 59200/59796 | epoch 11.88 | loss 0.0038 | lr 2.22e-07
+2026-10-21 17:32:24 | INFO    | src.trainer | [进度] step 59300/59796 | epoch 11.90 | loss 0.0023 | lr 1.85e-07
+2026-10-21 17:32:44 | INFO    | src.trainer | [进度] step 59400/59796 | epoch 11.92 | loss 0.0034 | lr 1.48e-07
+2026-10-21 17:33:04 | INFO    | src.trainer | [进度] step 59500/59796 | epoch 11.94 | loss 0.0160 | lr 1.1e-07
+2026-10-21 17:33:25 | INFO    | src.trainer | [进度] step 59600/59796 | epoch 11.96 | loss 0.0083 | lr 7.32e-08
+2026-10-21 17:33:46 | INFO    | src.trainer | [进度] step 59700/59796 | epoch 11.98 | loss 0.0004 | lr 3.6e-08
+2026-10-21 17:34:43 | INFO    | src.trainer | [验证] epoch 12.00 | eval_loss=0.9103 | eval_accuracy=0.8947 | eval_macro_f1=0.8943 | eval_weighted_f1=0.8944 | eval_top3_accuracy=0.9728 | eval_runtime=37.3346 | eval_samples_per_second=266.9370 | eval_steps_per_second=8.3570 | epoch=12.0000
+2026-10-21 17:35:22 | INFO    | src.trainer | [验证] epoch 12.00 | val_loss=0.9103 | val_accuracy=0.8947 | val_macro_f1=0.8943 | val_weighted_f1=0.8944 | val_top3_accuracy=0.9728 | val_runtime=37.9409 | val_samples_per_second=262.6720 | val_steps_per_second=8.2230 | epoch=12.0000
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] epoch                    12.0
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] test_accuracy            0.8887216536223159
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] test_loss                0.9508004784584045
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] test_macro_f1            0.8874703932467615
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] test_top3_accuracy       0.9742123218944411
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] test_weighted_f1         0.8876207412674025
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_accuracy             0.8947421232189444
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_loss                 0.9102924466133118
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_macro_f1             0.894272931171809
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_runtime              37.9409
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_samples_per_second   262.672
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_steps_per_second     8.223
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_top3_accuracy        0.9728075456552278
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] val_weighted_f1          0.8944135546611102
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] 最优模型已保存到 E:\Study\NLPLearn\P1\model_zh_balance\single_label\best
+2026-10-21 17:36:00 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_zh_balance\single_label\test_predictions.csv（9966 条）
+2026-10-21 17:36:00 | INFO    | src.trainer | [single] 完成，按 macro_f1=0.8874703932467615 选取的最优模型已就绪
+2026-10-21 17:36:00 | INFO    | main | 全部训练完成，模型目录：E:\Study\NLPLearn\P1\model_zh_balance

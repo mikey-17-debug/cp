@@ -2,10 +2,11 @@
 
 中英文电影类型分类（单标签 / 多标签）+ 训练后压缩实验
 
-- 中文：`chinese-bert-wwm` + `config.yaml`
+- 中文一期：`chinese-bert-wwm` + `config.yaml`（36 类）
+- 中文二期：`chinese-bert-wwm` + `config_zh_balance.yaml`（10 类均衡，单标签）
 - 英文：`bert-base-uncased` + `config_imdb.yaml`（IMDb-Media）
 
-两套数据共用同一套训练/推理/压缩代码，通过配置文件切换，互不覆盖产物。
+三套数据共用同一套训练/推理/压缩代码，通过配置文件切换，互不覆盖产物。
 
 ## 环境初始化
 
@@ -20,9 +21,12 @@ pip install -r install/requirements.txt
 
 ```
 Bert_model/
-├── config.yaml            # 中文配置：路径、切分、模型、训练超参、任务参数
+├── config.yaml            # 中文一期（36 类）
+├── config_zh_balance.yaml # 中文二期（10 类均衡，单标签）
 ├── config_imdb.yaml       # 英文 IMDb 配置（独立数据源与输出目录）
 ├── main.py                # 命令行入口（train / predict / predict-set）
+├── predict_genre.py       # 独立预测脚本（只改模型路径即可用）
+├── api_server.py          # HTTP API（Flask，支持 API Key 与 CORS）
 ├── run_optimization.py    # 压缩实验入口（量化 / 剪枝 / 低秩分解）
 ├── src/
 │   ├── config.py          # YAML -> 强类型配置，相对路径统一按项目根目录解析
@@ -38,26 +42,27 @@ Bert_model/
 │   └── utils.py           # 日志、随机种子、设备信息
 ├── data_clean.py          # 中文原始数据清洗脚本（生成 dataset/clean_data.txt）
 └── dataset/
-    ├── clean_data.txt     # 中文训练数据
-    └── imdb_splits/       # 英文切分导出（运行后生成，默认不入库）
+    ├── clean_data.txt       # 中文一期训练数据
+    ├── zh_balance_splits/   # 中文二期切分导出（运行后生成）
+    └── imdb_splits/         # 英文切分导出（运行后生成，默认不入库）
 ```
 
 ## 数据与任务
 
-| 项目 | 中文（`config.yaml`） | 英文 IMDb（`config_imdb.yaml`） |
-| --- | --- | --- |
-| 数据源 | `dataset/clean_data.txt`（分隔符文本） | `../../T1/imdb_media_dataset`（HF Arrow） |
-| 输入文本 | `summary` | `{title}. {storyline}`，缺失时回退 `presentation` / `title` |
-| 标签字段 | `label` | `genres`（多值） |
-| 标签空间 | 36 类 | 21 个题材类（剔除 7 个格式类，丢弃低频 <10 的异体标签） |
-| 单标签口径 | 多类型展开为多条「同摘要 + 不同标签」样本 | `primary`（genres 首项） |
-| 多标签阈值 | 固定 0.5 | 验证集逐类校准（写入 `labels.json`） |
-| 切分 | 影片级 9:1:1（seed=42） | 影片级 9:1:1（seed=42） |
+| 项目 | 中文一期（`config.yaml`） | 中文二期（`config_zh_balance.yaml`） | 英文 IMDb（`config_imdb.yaml`） |
+| --- | --- | --- | --- |
+| 数据源 | `dataset/clean_data.txt` | `../original_file/data_balance.tsv` | `../../T1/imdb_media_dataset`（HF Arrow） |
+| 输入文本 | `summary` | `summary` | `{title}. {storyline}`，回退 `presentation` / `title` |
+| 标签字段 | `label` | `genre` | `genres`（多值） |
+| 标签空间 | 36 类 | 10 类（每类 10,000 条） | 21 个题材类（剔除 7 个格式类） |
+| 单标签口径 | 多类型展开为多条样本 | `primary`（每行一个类型） | `primary`（genres 首项） |
+| 多标签阈值 | 固定 0.5 | 不训练多标签 | 验证集逐类校准 |
+| 切分 | 影片级 9:1:1 | 分层 8:1:1 | 影片级 9:1:1 |
 
 - `single`：交叉熵，指标为 accuracy / macro-F1 / top-k；
 - `multi`：BCEWithLogits，指标为 micro/macro-F1 / 子集准确率 / 汉明损失；
-- 切分先在**影片级**完成，再展开单标签样本，避免同一摘要跨集合泄漏；
-- 出现次数低于 `data.min_label_count` 的类型自动剔除，避免低频噪声标签。
+- 中文二期会剔除同一摘要对应不同类别的冲突样本，并按 `data.separator: "\t"` 读取 TSV；
+- 切分先在**影片级**完成，避免同一摘要跨集合泄漏；低频标签按 `data.min_label_count` 剔除。
 
 ## 运行
 
@@ -83,6 +88,22 @@ python main.py predict --task single --text "一名银行家蒙冤入狱，用�
 python main.py predict --task multi  --text "一名银行家蒙冤入狱，用二十年时间挖通墙壁越狱。"
 ```
 
+### 中文二期（10 类均衡）
+
+```cmd
+:: 只训练单标签（12 epoch 上限 + patience=3 早停）
+python main.py --config config_zh_balance.yaml train --task single
+
+:: 从最新 checkpoint 续训
+python main.py --config config_zh_balance.yaml train --task single --resume
+
+:: 指定检查点续训
+python main.py --config config_zh_balance.yaml train --task single --resume "..\model_zh_balance\single_label\checkpoint-39864"
+
+:: 推理
+python main.py --config config_zh_balance.yaml predict --task single --text "一名银行家蒙冤入狱，用二十年时间挖通墙壁越狱。"
+```
+
 ### 英文 IMDb
 
 ```cmd
@@ -102,10 +123,10 @@ python main.py --config config_imdb.yaml --log-file imdb_train.log train --task 
 
 ## 输出
 
-中文模型保存到 `config.yaml` 的 `training.output_root`（默认 `../../model`），英文保存到 `config_imdb.yaml` 的 `../../model_imdb`：
+中文一期保存到 `../../model`，中文二期保存到 `../../model_zh_balance`，英文保存到 `../../model_imdb`：
 
 ```
-model/ 或 model_imdb/
+model/ 或 model_zh_balance/ 或 model_imdb/
 ├── single_label/
 │   ├── best/              # 最优模型 + 分词器 + labels.json
 │   ├── labels.json        # 标签空间、阈值、最大长度
@@ -119,8 +140,9 @@ model/ 或 model_imdb/
 训练结束后会把实际使用的切分写回 `data.export_dir`：
 
 ```
-Bert_model/dataset/splits/       # 中文
-Bert_model/dataset/imdb_splits/  # 英文
+Bert_model/dataset/splits/             # 中文一期
+Bert_model/dataset/zh_balance_splits/  # 中文二期
+Bert_model/dataset/imdb_splits/        # 英文
 ├── single_label/{train,val,test}.csv   # 列：summary, label
 └── multi_label/{train,val,test}.csv    # 列：summary, labels（多个类型用 | 分隔）
 ```
@@ -159,6 +181,40 @@ python main.py predict-set --task single --split val
 > 若需复现实验中的指标，请用实验时的批大小导出：`--batch-size 64`。
 > 其余变体与基线对批大小不敏感。
 
+## 独立预测与 HTTP API
+
+### 独立预测脚本
+
+`predict_genre.py` 只依赖 `torch` 与 `transformers`，导入时直接加载模型，改顶部 `MODEL_DIR` 即可切换模型：
+
+```python
+from predict_genre import predict
+
+result = predict({"text": "一名银行家蒙冤入狱，用二十年时间挖通墙壁越狱。"})
+# {"text": ..., "pred_class": "犯罪", "score": 0.9087, "top_k": [...], "duration": 45}
+```
+
+命令行与 CPU 模式：
+
+```cmd
+python predict_genre.py --text "剧情简介"
+
+:: 强制 CPU
+set GENRE_DEVICE=cpu
+python predict_genre.py --text "剧情简介"
+```
+
+### HTTP API
+
+```cmd
+python api_server.py --config config_zh_balance.yaml --task single --host 0.0.0.0 --port 8000 --api-key <key>
+```
+
+- `GET /health`：模型、标签、设备状态
+- `POST /predict`：`{"texts": ["..."], "top_k": 3}`
+- 请求头 `X-API-Key` 或 `Authorization: Bearer <key>`；已内置 CORS
+- 需要公网访问时可用 `cloudflared tunnel --url http://127.0.0.1:8000` 生成临时 HTTPS 地址
+
 ## 模型压缩实验
 
 对已训练好的两个 best 模型分别做 FP16/BF16、动态 INT8、非结构化剪枝（30%/50%）、结构化剪枝（保留 75%/50%）与低秩分解（75%/50%/25%），共 10 个变体/任务：
@@ -181,6 +237,16 @@ python run_optimization.py --config config_imdb.yaml --task single
 
 ## 实验结果
 
+### 中文二期（10 类均衡，chinese-bert-wwm，12 epoch）
+
+| 任务 | 测试集指标 |
+| --- | --- |
+| 单标签 | Acc 0.8887、Macro-F1 0.8875、Top-3 0.9742（验证集 Acc 0.8947 / Macro-F1 0.8943） |
+
+- 训练数据：99,658 条（10 类均衡，剔除重复与跨类冲突），train 79,726 / val 9,966 / test 9,966
+- 配置：`max_length=384`、batch 16、lr 2e-5、bf16、12 epoch 上限 + patience=3；12 轮均有小幅提升，未触发早停
+- 从 checkpoint-39864（epoch 8）续训到 epoch 12，测试 Acc 0.8819 → 0.8887、Macro-F1 0.8810 → 0.8875
+
 ### 英文 IMDb（bert-base-uncased，2 epoch，逐类阈值）
 
 | 任务 | 测试集指标 |
@@ -190,7 +256,7 @@ python run_optimization.py --config config_imdb.yaml --task single
 
 压缩要点：FP16/BF16 体积 209.6 MB（50.1%）、GPU 延迟 4.98~5.51 ms，精度无损；INT8 体积 173.8 MB（41.5%）、CPU 吞吐提升 1.24~1.31×，主指标下降 3.7~4.3 个百分点；结构化剪枝与低秩分解未微调时精度损失较大，需配合微调后再部署。完整数据见 [model_imdb_optimization_report.md](model_imdb_optimization_report.md)。
 
-### 中文（chinese-bert-wwm，3 epoch）
+### 中文一期（36 类，chinese-bert-wwm，3 epoch）
 
 | 任务 | 测试集指标 |
 | --- | --- |
@@ -220,3 +286,4 @@ Bert_model/imdb_deliverables/
 - bf16 + 融合 AdamW（`training.optim`）+ batch 32，RTX 4070 Laptop 实测约 105 samples/s，GPU 利用率约 98%。
 - Windows 下 `dataloader_num_workers>0` 反而更慢（进程启动开销），默认保持 0。
 - 英文数据量大（约 24 万部影片），2 epoch 训练约 3 小时；压缩实验含 CPU 延迟测量约 3 小时 20 分钟。
+- 中文二期 10 类均衡数据、seq 384 / batch 16，12 epoch 实测约 5.5 小时；可用 `--resume` 从检查点续训。

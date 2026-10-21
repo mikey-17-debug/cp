@@ -79,6 +79,12 @@ def _build_parser() -> argparse.ArgumentParser:
     train.add_argument("--seed", type=int, help="覆盖 training.seed 与 split.seed")
     train.add_argument("--limit", type=int, help="覆盖 data.limit，仅用前 N 条样本（调试）")
     train.add_argument("--cpu", action="store_true", help="强制使用 CPU 训练")
+    train.add_argument(
+        "--resume",
+        nargs="?",
+        const="latest",
+        help="从检查点续训：不带路径时使用该任务最新的 checkpoint-*",
+    )
 
     predict = sub.add_parser("predict", help="用已训练模型推理", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     predict.add_argument("--task", choices=list(TASK_KEYS), help="按任务自动定位模型目录")
@@ -155,7 +161,28 @@ def _command_train(parsed: argparse.Namespace) -> int:
     logger.info("输出目录：%s", config.output_root)
     logger.info("设备：%s", device_label())
 
-    train_all(config, task_keys)
+    resume_checkpoints = {}
+    if parsed.resume:
+        if parsed.resume != "latest" and len(task_keys) > 1:
+            raise SystemExit("--resume 指定具体路径时只能训练单个任务")
+        for task_key in task_keys:
+            task_dir = config.task_output_dir(task_key)
+            if parsed.resume == "latest":
+                checkpoints = sorted(
+                    task_dir.glob("checkpoint-*"),
+                    key=lambda path: int(path.name.split("-")[-1]),
+                )
+                if not checkpoints:
+                    raise SystemExit(f"[{task_key}] 未找到可续训的 checkpoint：{task_dir}")
+                resume_checkpoints[task_key] = checkpoints[-1]
+            else:
+                checkpoint = Path(parsed.resume).expanduser().resolve()
+                if not checkpoint.exists():
+                    raise SystemExit(f"检查点不存在：{checkpoint}")
+                resume_checkpoints[task_key] = checkpoint
+        logger.info("续训检查点：%s", {key: str(value) for key, value in resume_checkpoints.items()})
+
+    train_all(config, task_keys, resume_checkpoints)
     logger.info("全部训练完成，模型目录：%s", config.output_root)
     return 0
 
