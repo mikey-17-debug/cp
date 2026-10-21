@@ -125,7 +125,7 @@ Bert_model/dataset/imdb_splits/  # 英文
 └── multi_label/{train,val,test}.csv    # 列：summary, labels（多个类型用 | 分隔）
 ```
 
-关闭该行为：在对应配置中设置 `data.export_splits: false`。两个目录体积较大（英文 `train.csv` 超过 100 MB），默认不纳入 Git。
+关闭该行为：在对应配置中设置 `data.export_splits: false`。英文两个 `train.csv` 超过 GitHub 单文件 100 MB 上限，仓库中以同目录的 `train.csv.gz` 归档（解压即得原文件）；压缩包与校验值同时保留在 `imdb_deliverables/large_files/`。
 
 ## 逐条预测结果
 

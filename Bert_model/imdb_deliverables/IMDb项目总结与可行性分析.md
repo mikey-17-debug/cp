@@ -257,7 +257,7 @@ imdb_deliverables/
 └── IMDb项目总结与可行性分析.md              # 本文件（覆盖中英两期）
 ```
 
-> 已扫描整个 `cp` 目录：仅 `Bert_model/dataset/imdb_splits/{single_label,multi_label}/train.csv` 两个文件超过 100 MB（108.63 / 109.85 MB），已分别压缩为 zip（28.63 / 28.98 MB），原始文件仍保留在原目录、未改动。两个压缩包解压后的 SHA256 与原始文件完全一致，校验值见 `SHA256SUMS.txt`。
+> 已扫描整个 `cp` 目录：仅 `Bert_model/dataset/imdb_splits/{single_label,multi_label}/train.csv` 两个文件超过 100 MB（108.63 / 109.85 MB），已分别压缩为 zip（28.63 / 28.98 MB），原始文件仍保留在原目录、未改动。两个压缩包解压后的 SHA256 与原始文件完全一致，校验值见 `SHA256SUMS.txt`。同一份数据也在原目录生成 `train.csv.gz` 并纳入 Git，便于直接从仓库还原。
 
 第一期（中文）与全部压缩变体保留在原始目录：
 
