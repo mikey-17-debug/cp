@@ -11,3 +11,7 @@ original_file/data_balance.tsv
 # API 运行时日志（训练日志仍入库）
 Bert_model/api_server.log
 Bert_model/api_test.log
+
+# 远程仓库中的大数据目录
+src/file/data
+src/file/original_file
