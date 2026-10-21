@@ -4,3 +4,6 @@ __pycache__/
 # GitHub 单文件上限 100 MB：这两个训练集切分不入库，同目录下有 train.csv.gz 压缩版
 Bert_model/dataset/imdb_splits/single_label/train.csv
 Bert_model/dataset/imdb_splits/multi_label/train.csv
+
+src/file/data
+src/file/original_file
