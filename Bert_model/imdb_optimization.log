@@ -1,0 +1,128 @@
+2026-10-21 04:11:29 | INFO    | optimization | 开始压缩实验：['single', 'multi']
+2026-10-21 04:11:29 | INFO    | optimization | 设备：cuda:0 (NVIDIA GeForce RTX 4070 Laptop GPU)
+2026-10-21 04:11:30 | INFO    | datasets | TensorFlow version 2.21.0 available.
+2026-10-21 04:11:48 | INFO    | src.data | 载入 arrow 数据：E:\Study\NLPLearn\P1\T1\imdb_media_dataset | split=train | 样本 249303 条
+2026-10-21 04:11:51 | INFO    | src.data | 按 (文本, 标签) 去重：243490 -> 243093
+2026-10-21 04:11:51 | INFO    | src.data | 载入影片样本 243093 条（文本列=summary，标签列=genres）
+2026-10-21 04:11:51 | INFO    | src.data | 标签空间 21 个（阈值 10，排除 7 个格式类）；剔除低频类型 12 个：Crimen(1), Documentaire(1), Documental(1), Drame(1), Drammatico(1), Guerra(1), Historique(1), Misterio(1), Suspense(1), Suspenso(2), Terror(1), X(1)
+2026-10-21 04:11:51 | INFO    | src.data | 按配置排除的标签：Adult, Documentary, Game-Show, News, Reality-TV, Short, Talk-Show
+2026-10-21 04:11:52 | INFO    | src.data | 影片级切分：train=165555, val=20695, test=20695
+2026-10-21 04:11:52 | INFO    | src.data | 按 (文本, 主类型) 去重：165555 -> 165504
+2026-10-21 04:11:52 | INFO    | src.data | 按 (文本, 主类型) 去重：20695 -> 20694
+2026-10-21 04:11:52 | INFO    | src.data | 按 (文本, 主类型) 去重：20695 -> 20693
+2026-10-21 04:11:52 | INFO    | src.data | [single] 样本量：train=165504, val=20694, test=20693, 标签数=21
+2026-10-21 04:11:54 | INFO    | src.data | [single] 训练/验证/测试集已写回 E:\Study\NLPLearn\P1\cp\Bert_model\dataset\imdb_splits\single_label
+2026-10-21 04:11:55 | INFO    | optimization | [single] 基线模型 E:\Study\NLPLearn\P1\model_imdb\single_label\best | 测试样本 20693 | 类别 21 | 参数 109.5M
+2026-10-21 04:11:55 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 04:11:55 | INFO    | optimization | [single] 变体 fp32：原始 FP32 模型
+2026-10-21 04:16:57 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\test_predictions.csv（20693 条）
+2026-10-21 04:18:08 | INFO    | optimization | [single] fp32                   size=418.4MB ratio=100.0% cpu=75.0ms gpu=6.9ms {'accuracy': 0.5411, 'macro_f1': 0.3589, 'top3_accuracy': 0.8291}
+2026-10-21 04:18:08 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 04:18:08 | INFO    | optimization | [single] 变体 fp16：半精度 FP16 推理
+2026-10-21 04:19:53 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\fp16\test_predictions.csv（20693 条）
+2026-10-21 04:24:24 | INFO    | optimization | [single] fp16                   size=209.6MB ratio=50.1% cpu=294.8ms gpu=5.4ms {'accuracy': 0.5411, 'macro_f1': 0.359, 'top3_accuracy': 0.8292}
+2026-10-21 04:24:24 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 04:24:24 | INFO    | optimization | [single] 变体 bf16：半精度 BF16 推理
+2026-10-21 04:26:07 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\bf16\test_predictions.csv（20693 条）
+2026-10-21 04:30:44 | INFO    | optimization | [single] bf16                   size=209.6MB ratio=50.1% cpu=285.5ms gpu=5.3ms {'accuracy': 0.5411, 'macro_f1': 0.3593, 'top3_accuracy': 0.8289}
+2026-10-21 04:30:44 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 04:30:44 | INFO    | optimization | [single] 变体 int8_dynamic：动态 INT8 量化（Linear 层）
+2026-10-21 05:13:34 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\int8_dynamic\test_predictions.csv（20693 条）
+2026-10-21 05:14:23 | INFO    | optimization | [single] int8_dynamic           size=173.8MB ratio=41.5% cpu=72.0ms gpu=-ms {'accuracy': 0.5045, 'macro_f1': 0.2699, 'top3_accuracy': 0.797}
+2026-10-21 05:14:23 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:14:23 | INFO    | optimization | [single] 变体 prune_unstructured_30：非结构化幅度剪枝 30%
+2026-10-21 05:14:24 | INFO    | src.optimization | 非结构化剪枝：目标 30%，实际稀疏率 29.99%
+2026-10-21 05:19:21 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\prune_unstructured_30\test_predictions.csv（20693 条）
+2026-10-21 05:20:31 | INFO    | optimization | [single] prune_unstructured_30  size=418.4MB ratio=100.0% cpu=74.6ms gpu=6.6ms {'accuracy': 0.5373, 'macro_f1': 0.351, 'top3_accuracy': 0.8276}
+2026-10-21 05:20:31 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:20:31 | INFO    | optimization | [single] 变体 prune_unstructured_50：非结构化幅度剪枝 50%
+2026-10-21 05:20:32 | INFO    | src.optimization | 非结构化剪枝：目标 50%，实际稀疏率 50.00%
+2026-10-21 05:25:30 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\prune_unstructured_50\test_predictions.csv（20693 条）
+2026-10-21 05:26:41 | INFO    | optimization | [single] prune_unstructured_50  size=418.4MB ratio=100.0% cpu=74.1ms gpu=6.4ms {'accuracy': 0.4971, 'macro_f1': 0.2989, 'top3_accuracy': 0.7994}
+2026-10-21 05:26:41 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:26:41 | INFO    | optimization | [single] 变体 prune_structured_25：结构化剪枝：FFN 中间层保留 75%
+2026-10-21 05:26:41 | INFO    | src.optimization | 结构化剪枝：FFN 中间层 3072 -> 2304
+2026-10-21 05:31:18 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\prune_structured_25\test_predictions.csv（20693 条）
+2026-10-21 05:32:20 | INFO    | optimization | [single] prune_structured_25    size=364.4MB ratio=87.1% cpu=67.9ms gpu=5.9ms {'accuracy': 0.4366, 'macro_f1': 0.2204, 'top3_accuracy': 0.753}
+2026-10-21 05:32:20 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:32:20 | INFO    | optimization | [single] 变体 prune_structured_50：结构化剪枝：FFN 中间层保留 50%
+2026-10-21 05:32:20 | INFO    | src.optimization | 结构化剪枝：FFN 中间层 3072 -> 1536
+2026-10-21 05:36:19 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\prune_structured_50\test_predictions.csv（20693 条）
+2026-10-21 05:37:13 | INFO    | optimization | [single] prune_structured_50    size=310.3MB ratio=74.2% cpu=63.7ms gpu=5.7ms {'accuracy': 0.3568, 'macro_f1': 0.1186, 'top3_accuracy': 0.6502}
+2026-10-21 05:37:13 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:37:13 | INFO    | optimization | [single] 变体 low_rank_75：FFN 低秩分解：秩比例为 min(in, out) 的 75%
+2026-10-21 05:37:19 | INFO    | src.optimization | 低秩分解：FFN 秩比例 75%，秩 = 576
+2026-10-21 05:41:57 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\low_rank_75\test_predictions.csv（20693 条）
+2026-10-21 05:43:07 | INFO    | optimization | [single] low_rank_75            size=405.0MB ratio=96.8% cpu=79.2ms gpu=6.7ms {'accuracy': 0.5088, 'macro_f1': 0.3125, 'top3_accuracy': 0.8091}
+2026-10-21 05:43:07 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:43:07 | INFO    | optimization | [single] 变体 low_rank_50：FFN 低秩分解：秩比例为 min(in, out) 的 50%
+2026-10-21 05:43:13 | INFO    | src.optimization | 低秩分解：FFN 秩比例 50%，秩 = 384
+2026-10-21 05:47:34 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\low_rank_50\test_predictions.csv（20693 条）
+2026-10-21 05:48:34 | INFO    | optimization | [single] low_rank_50            size=337.5MB ratio=80.7% cpu=71.4ms gpu=6.6ms {'accuracy': 0.37, 'macro_f1': 0.1781, 'top3_accuracy': 0.7078}
+2026-10-21 05:48:34 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:48:34 | INFO    | optimization | [single] 变体 low_rank_25：FFN 低秩分解：秩比例为 min(in, out) 的 25%
+2026-10-21 05:48:40 | INFO    | src.optimization | 低秩分解：FFN 秩比例 25%，秩 = 192
+2026-10-21 05:52:17 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\optimized\low_rank_25\test_predictions.csv（20693 条）
+2026-10-21 05:53:07 | INFO    | optimization | [single] low_rank_25            size=270.0MB ratio=64.5% cpu=62.3ms gpu=6.4ms {'accuracy': 0.253, 'macro_f1': 0.0686, 'top3_accuracy': 0.5892}
+2026-10-21 05:53:24 | INFO    | src.data | 载入 arrow 数据：E:\Study\NLPLearn\P1\T1\imdb_media_dataset | split=train | 样本 249303 条
+2026-10-21 05:53:27 | INFO    | src.data | 按 (文本, 标签) 去重：243490 -> 243093
+2026-10-21 05:53:27 | INFO    | src.data | 载入影片样本 243093 条（文本列=summary，标签列=genres）
+2026-10-21 05:53:27 | INFO    | src.data | 标签空间 21 个（阈值 10，排除 7 个格式类）；剔除低频类型 12 个：Crimen(1), Documentaire(1), Documental(1), Drame(1), Drammatico(1), Guerra(1), Historique(1), Misterio(1), Suspense(1), Suspenso(2), Terror(1), X(1)
+2026-10-21 05:53:27 | INFO    | src.data | 按配置排除的标签：Adult, Documentary, Game-Show, News, Reality-TV, Short, Talk-Show
+2026-10-21 05:53:29 | INFO    | src.data | 影片级切分：train=165555, val=20695, test=20695
+2026-10-21 05:53:29 | INFO    | src.data | [multi] 样本量：train=165555, val=20695, test=20695, 标签数=21
+2026-10-21 05:53:31 | INFO    | src.data | [multi] 训练/验证/测试集已写回 E:\Study\NLPLearn\P1\cp\Bert_model\dataset\imdb_splits\multi_label
+2026-10-21 05:53:31 | INFO    | optimization | [multi] 基线模型 E:\Study\NLPLearn\P1\model_imdb\multi_label\best | 测试样本 20695 | 类别 21 | 参数 109.5M
+2026-10-21 05:53:31 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:53:31 | INFO    | optimization | [multi] 变体 fp32：原始 FP32 模型
+2026-10-21 05:58:21 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\test_predictions.csv（20695 条）
+2026-10-21 05:59:30 | INFO    | optimization | [multi] fp32                   size=418.4MB ratio=100.0% cpu=71.7ms gpu=6.3ms {'subset_accuracy': 0.2118, 'macro_f1': 0.5877, 'micro_f1': 0.618, 'hamming_loss': 0.0795}
+2026-10-21 05:59:30 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 05:59:30 | INFO    | optimization | [multi] 变体 fp16：半精度 FP16 推理
+2026-10-21 06:01:12 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\fp16\test_predictions.csv（20695 条）
+2026-10-21 06:05:38 | INFO    | optimization | [multi] fp16                   size=209.6MB ratio=50.1% cpu=286.6ms gpu=5.5ms {'subset_accuracy': 0.212, 'macro_f1': 0.5878, 'micro_f1': 0.618, 'hamming_loss': 0.0794}
+2026-10-21 06:05:38 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 06:05:38 | INFO    | optimization | [multi] 变体 bf16：半精度 BF16 推理
+2026-10-21 06:07:18 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\bf16\test_predictions.csv（20695 条）
+2026-10-21 06:11:51 | INFO    | optimization | [multi] bf16                   size=209.6MB ratio=50.1% cpu=278.7ms gpu=5.0ms {'subset_accuracy': 0.2121, 'macro_f1': 0.5878, 'micro_f1': 0.618, 'hamming_loss': 0.0794}
+2026-10-21 06:11:52 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 06:11:52 | INFO    | optimization | [multi] 变体 int8_dynamic：动态 INT8 量化（Linear 层）
+2026-10-21 06:53:34 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\int8_dynamic\test_predictions.csv（20695 条）
+2026-10-21 06:54:23 | INFO    | optimization | [multi] int8_dynamic           size=173.8MB ratio=41.5% cpu=71.3ms gpu=-ms {'subset_accuracy': 0.1862, 'macro_f1': 0.5287, 'micro_f1': 0.5748, 'hamming_loss': 0.0797}
+2026-10-21 06:54:23 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 06:54:23 | INFO    | optimization | [multi] 变体 prune_unstructured_30：非结构化幅度剪枝 30%
+2026-10-21 06:54:24 | INFO    | src.optimization | 非结构化剪枝：目标 30%，实际稀疏率 29.99%
+2026-10-21 06:59:15 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\prune_unstructured_30\test_predictions.csv（20695 条）
+2026-10-21 07:00:23 | INFO    | optimization | [multi] prune_unstructured_30  size=418.4MB ratio=100.0% cpu=73.3ms gpu=6.3ms {'subset_accuracy': 0.1892, 'macro_f1': 0.5869, 'micro_f1': 0.6146, 'hamming_loss': 0.0833}
+2026-10-21 07:00:23 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 07:00:23 | INFO    | optimization | [multi] 变体 prune_unstructured_50：非结构化幅度剪枝 50%
+2026-10-21 07:00:24 | INFO    | src.optimization | 非结构化剪枝：目标 50%，实际稀疏率 49.98%
+2026-10-21 07:05:12 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\prune_unstructured_50\test_predictions.csv（20695 条）
+2026-10-21 07:06:21 | INFO    | optimization | [multi] prune_unstructured_50  size=418.4MB ratio=100.0% cpu=73.1ms gpu=6.2ms {'subset_accuracy': 0.1318, 'macro_f1': 0.551, 'micro_f1': 0.5745, 'hamming_loss': 0.0981}
+2026-10-21 07:06:21 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 07:06:21 | INFO    | optimization | [multi] 变体 prune_structured_25：结构化剪枝：FFN 中间层保留 75%
+2026-10-21 07:06:21 | INFO    | src.optimization | 结构化剪枝：FFN 中间层 3072 -> 2304
+2026-10-21 07:10:51 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\prune_structured_25\test_predictions.csv（20695 条）
+2026-10-21 07:11:52 | INFO    | optimization | [multi] prune_structured_25    size=364.4MB ratio=87.1% cpu=67.8ms gpu=5.9ms {'subset_accuracy': 0.1394, 'macro_f1': 0.4505, 'micro_f1': 0.511, 'hamming_loss': 0.0939}
+2026-10-21 07:11:52 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 07:11:52 | INFO    | optimization | [multi] 变体 prune_structured_50：结构化剪枝：FFN 中间层保留 50%
+2026-10-21 07:11:52 | INFO    | src.optimization | 结构化剪枝：FFN 中间层 3072 -> 1536
+2026-10-21 07:15:51 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\prune_structured_50\test_predictions.csv（20695 条）
+2026-10-21 07:16:43 | INFO    | optimization | [multi] prune_structured_50    size=310.3MB ratio=74.2% cpu=62.9ms gpu=6.7ms {'subset_accuracy': 0.0503, 'macro_f1': 0.2775, 'micro_f1': 0.3768, 'hamming_loss': 0.1433}
+2026-10-21 07:16:43 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 07:16:43 | INFO    | optimization | [multi] 变体 low_rank_75：FFN 低秩分解：秩比例为 min(in, out) 的 75%
+2026-10-21 07:16:50 | INFO    | src.optimization | 低秩分解：FFN 秩比例 75%，秩 = 576
+2026-10-21 07:21:30 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\low_rank_75\test_predictions.csv（20695 条）
+2026-10-21 07:22:39 | INFO    | optimization | [multi] low_rank_75            size=405.0MB ratio=96.8% cpu=79.3ms gpu=6.7ms {'subset_accuracy': 0.2195, 'macro_f1': 0.5612, 'micro_f1': 0.5975, 'hamming_loss': 0.0772}
+2026-10-21 07:22:39 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 07:22:39 | INFO    | optimization | [multi] 变体 low_rank_50：FFN 低秩分解：秩比例为 min(in, out) 的 50%
+2026-10-21 07:22:45 | INFO    | src.optimization | 低秩分解：FFN 秩比例 50%，秩 = 384
+2026-10-21 07:27:06 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\low_rank_50\test_predictions.csv（20695 条）
+2026-10-21 07:28:05 | INFO    | optimization | [multi] low_rank_50            size=337.5MB ratio=80.7% cpu=71.4ms gpu=6.3ms {'subset_accuracy': 0.1908, 'macro_f1': 0.4386, 'micro_f1': 0.5215, 'hamming_loss': 0.082}
+2026-10-21 07:28:05 | INFO    | optimization | ------------------------------------------------------------
+2026-10-21 07:28:05 | INFO    | optimization | [multi] 变体 low_rank_25：FFN 低秩分解：秩比例为 min(in, out) 的 25%
+2026-10-21 07:28:11 | INFO    | src.optimization | 低秩分解：FFN 秩比例 25%，秩 = 192
+2026-10-21 07:31:48 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\multi_label\optimized\low_rank_25\test_predictions.csv（20695 条）
+2026-10-21 07:32:37 | INFO    | optimization | [multi] low_rank_25            size=270.0MB ratio=64.5% cpu=63.0ms gpu=6.9ms {'subset_accuracy': 0.1004, 'macro_f1': 0.1184, 'micro_f1': 0.3408, 'hamming_loss': 0.0991}
+2026-10-21 07:32:37 | INFO    | optimization | 结果已写入 E:\Study\NLPLearn\P1\model_imdb\optimization_results.json
+2026-10-21 07:32:37 | INFO    | optimization | 报告已写入 E:\Study\NLPLearn\P1\cp\model_imdb_optimization_report.md

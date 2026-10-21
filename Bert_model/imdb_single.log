@@ -1,0 +1,94 @@
+2026-10-21 03:18:03 | INFO    | main | 配置文件：E:\Study\NLPLearn\P1\cp\Bert_model\config_imdb.yaml
+2026-10-21 03:18:03 | INFO    | main | 训练数据：E:\Study\NLPLearn\P1\T1\imdb_media_dataset
+2026-10-21 03:18:03 | INFO    | main | 预训练模型：E:\Study\NLPLearn\NLP_learn10_12\PretrainedModel\bert-base-uncased
+2026-10-21 03:18:03 | INFO    | main | 输出目录：E:\Study\NLPLearn\P1\model_imdb
+2026-10-21 03:18:03 | INFO    | main | 设备：cuda:0 (NVIDIA GeForce RTX 4070 Laptop GPU)
+2026-10-21 03:18:03 | INFO    | src.trainer | ======================================================================
+2026-10-21 03:18:03 | INFO    | src.trainer | [single] 开始训练 | 设备 cuda:0 (NVIDIA GeForce RTX 4070 Laptop GPU) | 输出 E:\Study\NLPLearn\P1\model_imdb\single_label
+2026-10-21 03:18:03 | INFO    | src.trainer | ======================================================================
+2026-10-21 03:18:03 | INFO    | src.data | 分词器：BertTokenizer（词表 30522）
+2026-10-21 03:18:21 | INFO    | src.data | 载入 arrow 数据：E:\Study\NLPLearn\P1\T1\imdb_media_dataset | split=train | 样本 249303 条
+2026-10-21 03:18:23 | INFO    | src.data | 按 (文本, 标签) 去重：243490 -> 243093
+2026-10-21 03:18:23 | INFO    | src.data | 载入影片样本 243093 条（文本列=summary，标签列=genres）
+2026-10-21 03:18:23 | INFO    | src.data | 标签空间 21 个（阈值 10，排除 7 个格式类）；剔除低频类型 12 个：Crimen(1), Documentaire(1), Documental(1), Drame(1), Drammatico(1), Guerra(1), Historique(1), Misterio(1), Suspense(1), Suspenso(2), Terror(1), X(1)
+2026-10-21 03:18:23 | INFO    | src.data | 按配置排除的标签：Adult, Documentary, Game-Show, News, Reality-TV, Short, Talk-Show
+2026-10-21 03:18:24 | INFO    | src.data | 影片级切分：train=165555, val=20695, test=20695
+2026-10-21 03:18:24 | INFO    | src.data | 按 (文本, 主类型) 去重：165555 -> 165504
+2026-10-21 03:18:24 | INFO    | src.data | 按 (文本, 主类型) 去重：20695 -> 20694
+2026-10-21 03:18:25 | INFO    | src.data | 按 (文本, 主类型) 去重：20695 -> 20693
+2026-10-21 03:18:25 | INFO    | src.data | [single] 样本量：train=165504, val=20694, test=20693, 标签数=21
+2026-10-21 03:18:26 | INFO    | src.data | [single] 训练/验证/测试集已写回 E:\Study\NLPLearn\P1\cp\Bert_model\dataset\imdb_splits\single_label
+2026-10-21 03:19:14 | INFO    | src.model | 加载预训练模型 bert-base-uncased：num_labels=21, problem_type=single_label_classification, 新增分类头将随机初始化
+2026-10-21 03:19:14 | INFO    | src.trainer | [single] 训练参数：epochs=2, batch=32, lr=2e-05, warmup_steps=1034, max_length=256
+2026-10-21 03:20:11 | INFO    | src.trainer | [进度] step 200/10344 | epoch 0.04 | loss 2.9019 | lr 3.85e-06
+2026-10-21 03:21:06 | INFO    | src.trainer | [进度] step 400/10344 | epoch 0.08 | loss 2.3779 | lr 7.72e-06
+2026-10-21 03:22:02 | INFO    | src.trainer | [进度] step 600/10344 | epoch 0.12 | loss 2.0628 | lr 1.16e-05
+2026-10-21 03:22:58 | INFO    | src.trainer | [进度] step 800/10344 | epoch 0.15 | loss 1.8884 | lr 1.55e-05
+2026-10-21 03:23:54 | INFO    | src.trainer | [进度] step 1000/10344 | epoch 0.19 | loss 1.7617 | lr 1.93e-05
+2026-10-21 03:24:51 | INFO    | src.trainer | [进度] step 1200/10344 | epoch 0.23 | loss 1.6646 | lr 1.96e-05
+2026-10-21 03:25:47 | INFO    | src.trainer | [进度] step 1400/10344 | epoch 0.27 | loss 1.6650 | lr 1.92e-05
+2026-10-21 03:26:44 | INFO    | src.trainer | [进度] step 1600/10344 | epoch 0.31 | loss 1.6463 | lr 1.88e-05
+2026-10-21 03:27:40 | INFO    | src.trainer | [进度] step 1800/10344 | epoch 0.35 | loss 1.6234 | lr 1.84e-05
+2026-10-21 03:28:36 | INFO    | src.trainer | [进度] step 2000/10344 | epoch 0.39 | loss 1.5645 | lr 1.79e-05
+2026-10-21 03:29:32 | INFO    | src.trainer | [进度] step 2200/10344 | epoch 0.43 | loss 1.5511 | lr 1.75e-05
+2026-10-21 03:30:28 | INFO    | src.trainer | [进度] step 2400/10344 | epoch 0.46 | loss 1.5572 | lr 1.71e-05
+2026-10-21 03:31:23 | INFO    | src.trainer | [进度] step 2600/10344 | epoch 0.50 | loss 1.5207 | lr 1.66e-05
+2026-10-21 03:32:19 | INFO    | src.trainer | [进度] step 2800/10344 | epoch 0.54 | loss 1.4922 | lr 1.62e-05
+2026-10-21 03:33:16 | INFO    | src.trainer | [进度] step 3000/10344 | epoch 0.58 | loss 1.4912 | lr 1.58e-05
+2026-10-21 03:34:12 | INFO    | src.trainer | [进度] step 3200/10344 | epoch 0.62 | loss 1.4927 | lr 1.53e-05
+2026-10-21 03:35:08 | INFO    | src.trainer | [进度] step 3400/10344 | epoch 0.66 | loss 1.4902 | lr 1.49e-05
+2026-10-21 03:36:04 | INFO    | src.trainer | [进度] step 3600/10344 | epoch 0.70 | loss 1.4664 | lr 1.45e-05
+2026-10-21 03:37:00 | INFO    | src.trainer | [进度] step 3800/10344 | epoch 0.73 | loss 1.5001 | lr 1.41e-05
+2026-10-21 03:37:56 | INFO    | src.trainer | [进度] step 4000/10344 | epoch 0.77 | loss 1.4431 | lr 1.36e-05
+2026-10-21 03:38:52 | INFO    | src.trainer | [进度] step 4200/10344 | epoch 0.81 | loss 1.4817 | lr 1.32e-05
+2026-10-21 03:39:48 | INFO    | src.trainer | [进度] step 4400/10344 | epoch 0.85 | loss 1.4680 | lr 1.28e-05
+2026-10-21 03:40:44 | INFO    | src.trainer | [进度] step 4600/10344 | epoch 0.89 | loss 1.4353 | lr 1.23e-05
+2026-10-21 03:41:41 | INFO    | src.trainer | [进度] step 4800/10344 | epoch 0.93 | loss 1.4520 | lr 1.19e-05
+2026-10-21 03:42:37 | INFO    | src.trainer | [进度] step 5000/10344 | epoch 0.97 | loss 1.4866 | lr 1.15e-05
+2026-10-21 03:44:18 | INFO    | src.trainer | [验证] epoch 1.00 | eval_loss=1.4246 | eval_accuracy=0.5383 | eval_macro_f1=0.3463 | eval_weighted_f1=0.5167 | eval_top3_accuracy=0.8293 | eval_runtime=51.9694 | eval_samples_per_second=398.1960 | eval_steps_per_second=6.2340 | epoch=1.0000
+2026-10-21 03:44:27 | INFO    | src.trainer | [进度] step 5200/10344 | epoch 1.01 | loss 1.4346 | lr 1.11e-05
+2026-10-21 03:45:23 | INFO    | src.trainer | [进度] step 5400/10344 | epoch 1.04 | loss 1.3106 | lr 1.06e-05
+2026-10-21 03:46:19 | INFO    | src.trainer | [进度] step 5600/10344 | epoch 1.08 | loss 1.2802 | lr 1.02e-05
+2026-10-21 03:47:14 | INFO    | src.trainer | [进度] step 5800/10344 | epoch 1.12 | loss 1.2826 | lr 9.76e-06
+2026-10-21 03:48:10 | INFO    | src.trainer | [进度] step 6000/10344 | epoch 1.16 | loss 1.2818 | lr 9.33e-06
+2026-10-21 03:49:06 | INFO    | src.trainer | [进度] step 6200/10344 | epoch 1.20 | loss 1.2965 | lr 8.9e-06
+2026-10-21 03:50:03 | INFO    | src.trainer | [进度] step 6400/10344 | epoch 1.24 | loss 1.2507 | lr 8.47e-06
+2026-10-21 03:50:59 | INFO    | src.trainer | [进度] step 6600/10344 | epoch 1.28 | loss 1.2914 | lr 8.05e-06
+2026-10-21 03:51:55 | INFO    | src.trainer | [进度] step 6800/10344 | epoch 1.31 | loss 1.2906 | lr 7.62e-06
+2026-10-21 03:52:51 | INFO    | src.trainer | [进度] step 7000/10344 | epoch 1.35 | loss 1.2709 | lr 7.19e-06
+2026-10-21 03:53:48 | INFO    | src.trainer | [进度] step 7200/10344 | epoch 1.39 | loss 1.2883 | lr 6.76e-06
+2026-10-21 03:54:44 | INFO    | src.trainer | [进度] step 7400/10344 | epoch 1.43 | loss 1.3015 | lr 6.33e-06
+2026-10-21 03:55:40 | INFO    | src.trainer | [进度] step 7600/10344 | epoch 1.47 | loss 1.2688 | lr 5.9e-06
+2026-10-21 03:56:36 | INFO    | src.trainer | [进度] step 7800/10344 | epoch 1.51 | loss 1.2586 | lr 5.47e-06
+2026-10-21 03:57:33 | INFO    | src.trainer | [进度] step 8000/10344 | epoch 1.55 | loss 1.2770 | lr 5.04e-06
+2026-10-21 03:58:30 | INFO    | src.trainer | [进度] step 8200/10344 | epoch 1.59 | loss 1.2513 | lr 4.61e-06
+2026-10-21 03:59:27 | INFO    | src.trainer | [进度] step 8400/10344 | epoch 1.62 | loss 1.2549 | lr 4.18e-06
+2026-10-21 04:00:24 | INFO    | src.trainer | [进度] step 8600/10344 | epoch 1.66 | loss 1.2689 | lr 3.75e-06
+2026-10-21 04:01:22 | INFO    | src.trainer | [进度] step 8800/10344 | epoch 1.70 | loss 1.2679 | lr 3.32e-06
+2026-10-21 04:02:18 | INFO    | src.trainer | [进度] step 9000/10344 | epoch 1.74 | loss 1.2722 | lr 2.89e-06
+2026-10-21 04:03:14 | INFO    | src.trainer | [进度] step 9200/10344 | epoch 1.78 | loss 1.2799 | lr 2.46e-06
+2026-10-21 04:04:10 | INFO    | src.trainer | [进度] step 9400/10344 | epoch 1.82 | loss 1.2770 | lr 2.03e-06
+2026-10-21 04:05:07 | INFO    | src.trainer | [进度] step 9600/10344 | epoch 1.86 | loss 1.2365 | lr 1.6e-06
+2026-10-21 04:06:04 | INFO    | src.trainer | [进度] step 9800/10344 | epoch 1.89 | loss 1.2840 | lr 1.17e-06
+2026-10-21 04:07:00 | INFO    | src.trainer | [进度] step 10000/10344 | epoch 1.93 | loss 1.2799 | lr 7.41e-07
+2026-10-21 04:07:56 | INFO    | src.trainer | [进度] step 10200/10344 | epoch 1.97 | loss 1.2537 | lr 3.11e-07
+2026-10-21 04:09:29 | INFO    | src.trainer | [验证] epoch 2.00 | eval_loss=1.4048 | eval_accuracy=0.5483 | eval_macro_f1=0.3610 | eval_weighted_f1=0.5305 | eval_top3_accuracy=0.8327 | eval_runtime=52.8259 | eval_samples_per_second=391.7400 | eval_steps_per_second=6.1330 | epoch=2.0000
+2026-10-21 04:10:24 | INFO    | src.trainer | [验证] epoch 2.00 | val_loss=1.4048 | val_accuracy=0.5483 | val_macro_f1=0.3610 | val_weighted_f1=0.5305 | val_top3_accuracy=0.8327 | val_runtime=53.0954 | val_samples_per_second=389.7510 | val_steps_per_second=6.1020 | epoch=2.0000
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] epoch                    2.0
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] test_accuracy            0.5412941574445465
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] test_loss                1.4146655797958374
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] test_macro_f1            0.3589830923839736
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] test_top3_accuracy       0.8288793311747934
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] test_weighted_f1         0.5237570534627152
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_accuracy             0.5483231854643859
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_loss                 1.404831886291504
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_macro_f1             0.36101658581192153
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_runtime              53.0954
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_samples_per_second   389.751
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_steps_per_second     6.102
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_top3_accuracy        0.8327051319222963
+2026-10-21 04:11:16 | INFO    | src.trainer | [single] val_weighted_f1          0.5305120508177856
+2026-10-21 04:11:17 | INFO    | src.trainer | [single] 最优模型已保存到 E:\Study\NLPLearn\P1\model_imdb\single_label\best
+2026-10-21 04:11:17 | INFO    | src.predictions | 预测结果已写入 E:\Study\NLPLearn\P1\model_imdb\single_label\test_predictions.csv（20693 条）
+2026-10-21 04:11:17 | INFO    | src.trainer | [single] 完成，按 macro_f1=0.3589830923839736 选取的最优模型已就绪
+2026-10-21 04:11:17 | INFO    | main | 全部训练完成，模型目录：E:\Study\NLPLearn\P1\model_imdb
