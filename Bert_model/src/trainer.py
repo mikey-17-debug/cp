@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Callable, Dict
 
 import numpy as np
-from transformers import Trainer, TrainerCallback, TrainingArguments
+from transformers import EarlyStoppingCallback, Trainer, TrainerCallback, TrainingArguments
 
 from .config import MULTI_LABEL, PROBLEM_TYPES, SINGLE_LABEL, ProjectConfig
 from .data import DynamicPadCollator, GenreDataset, build_tokenizer, prepare_data
@@ -243,6 +243,17 @@ def run_training(config: ProjectConfig, task_key: str) -> Dict[str, float]:
         config.model.max_length,
     )
 
+    callbacks = [ProgressLogCallback()]
+    patience = config.training.early_stopping_patience
+    if patience:
+        callbacks.append(EarlyStoppingCallback(early_stopping_patience=patience))
+        logger.info(
+            "[%s] 早停已启用：连续 %d 轮 %s 无提升即停止",
+            task_key,
+            patience,
+            task.metric_for_best_model,
+        )
+
     trainer = Trainer(
         model=model,
         args=args,
@@ -251,7 +262,7 @@ def run_training(config: ProjectConfig, task_key: str) -> Dict[str, float]:
         data_collator=DynamicPadCollator(tokenizer.pad_token_id),
         compute_metrics=_metrics_function(task_key, config),
         processing_class=tokenizer,
-        callbacks=[ProgressLogCallback()],
+        callbacks=callbacks,
     )
 
     trainer.train()

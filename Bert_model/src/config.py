@@ -49,6 +49,8 @@ class DataConfig:
     display_name: str = ""
     raw_path: str = "../original_file/movie_info.txt"
     encoding: str = "utf-8"
+    # 文本文件分隔符（TSV 用 "\t"）
+    separator: str = ","
     has_header: bool = True
     columns: List[str] = field(default_factory=lambda: ["id", "label", "name", "summary"])
     label_column: str = "label"
@@ -59,12 +61,16 @@ class DataConfig:
     text_template: str = ""
     # 模板渲染结果为空时，按顺序回退到这些字段（取第一个非空值）
     fallback_text_fields: List[str] = field(default_factory=list)
+    # 是否去掉文本中「整段重复两遍」的内容（IMDb storyline 常见）
+    dedupe_repeated_text: bool = False
     # 需要剔除的标签（例如 IMDb 的 Short/Documentary 属于载体格式而非题材）
     exclude_labels: List[str] = field(default_factory=list)
     # 单标签构造方式：expand（一条多类型展开成多条）/ primary（只取主类型）
     single_label_strategy: str = "expand"
     min_label_count: int = 5
     drop_duplicated: bool = True
+    # 同一文本对应多个不同标签时整组剔除，避免矛盾监督
+    drop_conflicting_labels: bool = False
     missing_text: str = ""
     limit: Optional[int] = None
     # 是否把实际参与训练 / 验证 / 测试的样本写回磁盘
@@ -116,6 +122,8 @@ class TrainingConfig:
     save_strategy: str = "epoch"
     save_total_limit: int = 1
     load_best_model_at_end: bool = True
+    # 连续 N 轮最优指标无提升则提前停止；null 表示不启用
+    early_stopping_patience: Optional[int] = None
     dataloader_num_workers: int = 0
     gradient_accumulation_steps: int = 1
     report_to: List[str] = field(default_factory=list)
@@ -322,6 +330,8 @@ def _validate(config: ProjectConfig) -> None:
             raise ValueError(
                 f"data.label_column={config.data.label_column!r} 不在 data.columns={config.data.columns} 中"
             )
+        if not config.data.separator:
+            raise ValueError("data.separator 不能为空")
     if not 0 < config.split.test_size < 1:
         raise ValueError(f"split.test_size 必须位于 (0, 1)，当前 {config.split.test_size}")
     if not 0 < config.split.val_size < 1:
@@ -336,6 +346,10 @@ def _validate(config: ProjectConfig) -> None:
         )
     if config.model.max_length < 2:
         raise ValueError(f"model.max_length 至少为 2，当前 {config.model.max_length}")
+    if config.training.early_stopping_patience is not None and config.training.early_stopping_patience < 1:
+        raise ValueError(
+            f"training.early_stopping_patience 必须 >= 1 或为 null，当前 {config.training.early_stopping_patience}"
+        )
 
     valid_dtypes = {"fp16", "bf16"}
     invalid = set(config.optimization.dtypes) - valid_dtypes

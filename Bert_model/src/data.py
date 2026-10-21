@@ -57,6 +57,7 @@ def _load_text_frame(config: ProjectConfig) -> pd.DataFrame:
     """读取分隔符文本文件（原中文数据集格式）。"""
     data = config.data
     read_kwargs: Dict[str, object] = {
+        "sep": data.separator,
         "encoding": data.encoding,
         "dtype": str,
         "keep_default_na": False,
@@ -76,6 +77,60 @@ def _load_text_frame(config: ProjectConfig) -> pd.DataFrame:
 def _template_fields(template: str) -> List[str]:
     """从文本模板中提取字段占位符，例如 "{title}. {storyline}" -> [title, storyline]。"""
     return sorted(set(re.findall(r"\{(\w+)\}", template)))
+
+
+def dedupe_repeated_text(text: str) -> str:
+    """去掉「整段重复两遍」的文本。
+
+    IMDb-Media 的 storyline 绝大多数是 "A A" 形式的二倍重复，
+    直接送入模型会让序列长度翻倍并造成不必要的截断。
+    """
+    stripped = str(text).strip()
+    length = len(stripped)
+    if length < 80:
+        return stripped
+
+    half = length // 2
+    left, right = stripped[:half].strip(), stripped[half:].strip()
+    if left and left == right:
+        return left
+
+    # 两份内容长度不一定完全相等：用开头片段定位第二份的起点
+    probe = stripped[:40]
+    position = stripped.find(probe, 40)
+    if position > 0:
+        first, second = stripped[:position].strip(), stripped[position:].strip()
+        if first and second:
+            if second == first:
+                return first
+            # 第二份是残段（略短）或尾部多了一点内容
+            if first.startswith(second) and len(second) >= 0.6 * len(first):
+                return first
+            if second.startswith(first):
+                return second
+    return stripped
+
+
+def _dedupe_fields(frame: pd.DataFrame, fields: Sequence[str]) -> int:
+    """对指定字段做整段重复去除，返回发生变化的字段值个数。"""
+    changed = 0
+    before_chars = after_chars = 0
+    for name in dict.fromkeys(fields):
+        original = frame[name].fillna("").astype(str).str.strip()
+        cleaned = original.map(dedupe_repeated_text)
+        changed += int((cleaned != original).sum())
+        before_chars += int(original.str.len().sum())
+        after_chars += int(cleaned.str.len().sum())
+        frame[name] = cleaned
+    if changed:
+        logger.info(
+            "文本去重：修改 %d 个字段值，总字符数 %d -> %d（约 %.1f%%）",
+            changed,
+            before_chars,
+            after_chars,
+            100 * (1 - after_chars / max(before_chars, 1)),
+        )
+    return changed
 
 
 def _render_template(frame: pd.DataFrame, template: str) -> pd.Series:
@@ -115,6 +170,11 @@ def _load_arrow_frame(config: ProjectConfig) -> pd.DataFrame:
         raise ValueError(f"arrow 数据源缺少列 {absent}，实际列：{dataset.column_names}")
 
     frame = pd.DataFrame({name: dataset[name] for name in unique})
+    if data.dedupe_repeated_text:
+        _dedupe_fields(
+            frame,
+            _template_fields(data.text_template) + list(data.fallback_text_fields),
+        )
     frame[data.text_column] = _render_template(frame, data.text_template)
 
     # 模板渲染为空（例如剧情简介缺失）时，按配置顺序回退到其他字段
@@ -142,6 +202,8 @@ def load_dataframe(config: ProjectConfig) -> pd.DataFrame:
 
     frame = frame.copy()
     frame[data.text_column] = frame[data.text_column].fillna(data.missing_text).astype(str).str.strip()
+    if data.dedupe_repeated_text:
+        frame[data.text_column] = frame[data.text_column].map(dedupe_repeated_text)
     frame = frame[frame[data.text_column] != ""].reset_index(drop=True)
 
     frame[GENRES_COLUMN] = frame[data.label_column].map(parse_labels)
@@ -152,6 +214,19 @@ def load_dataframe(config: ProjectConfig) -> pd.DataFrame:
         frame = frame.drop_duplicates(subset=[data.text_column, data.label_column]).reset_index(drop=True)
         if before != len(frame):
             logger.info("按 (文本, 标签) 去重：%d -> %d", before, len(frame))
+
+    if data.drop_conflicting_labels:
+        label_counts = frame.groupby(data.text_column)[data.label_column].nunique()
+        conflict_texts = label_counts[label_counts > 1].index
+        if len(conflict_texts):
+            before = len(frame)
+            frame = frame[~frame[data.text_column].isin(conflict_texts)].reset_index(drop=True)
+            logger.info(
+                "剔除跨类别冲突文本：%d 条文本 / %d 行 -> %d 行",
+                len(conflict_texts),
+                before,
+                len(frame),
+            )
 
     logger.info("载入影片样本 %d 条（文本列=%s，标签列=%s）", len(frame), data.text_column, data.label_column)
     return frame

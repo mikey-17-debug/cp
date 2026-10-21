@@ -22,6 +22,8 @@ data:
   # 片名 + 剧情简介；剧情简介缺失时回退到 presentation / title
   text_template: "{title}. {storyline}"
   fallback_text_fields: ["presentation", "title"]
+  # IMDb 的 storyline 约 96% 是「整段重复两遍」，训练前去掉重复部分
+  dedupe_repeated_text: true
   # 只保留题材类，剔除载体/节目形态标签
   exclude_labels:
     - "Short"
@@ -61,7 +63,9 @@ training:
   per_device_train_batch_size: 32
   per_device_eval_batch_size: 64
   learning_rate: 2.0e-5
-  num_train_epochs: 2
+  # 轮次上限放宽，是否继续由早停决定
+  num_train_epochs: 12
+  early_stopping_patience: 3
   weight_decay: 0.01
   optim: "adamw_torch_fused"
   warmup_ratio: 0.1

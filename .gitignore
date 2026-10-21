@@ -1,6 +1,13 @@
 .idea
 __pycache__/
 *.pyc
-# GitHub 单文件上限 100 MB：这两个训练集切分不入库，同目录下有 train.csv.gz 压缩版
+
+# GitHub 单文件上限 100 MB：超过 50 MB 的数据不入库，保留同目录 gzip 版本
 Bert_model/dataset/imdb_splits/single_label/train.csv
 Bert_model/dataset/imdb_splits/multi_label/train.csv
+Bert_model/dataset/zh_balance_splits/single_label/train.csv
+original_file/data_balance.tsv
+
+# API 运行时日志（训练日志仍入库）
+Bert_model/api_server.log
+Bert_model/api_test.log
