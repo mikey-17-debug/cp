@@ -1,0 +1,156 @@
+{
+  "task": "multi",
+  "metrics": {
+    "val_loss": 0.17188984155654907,
+    "val_subset_accuracy": 0.2595796086011114,
+    "val_macro_f1": 0.5370617394151621,
+    "val_micro_f1": 0.5923791847306675,
+    "val_weighted_f1": 0.5812958916446469,
+    "val_macro_precision": 0.6817635120951858,
+    "val_macro_recall": 0.4559123502632629,
+    "val_hamming_loss": 0.0677159194192294,
+    "val_threshold": 0.5,
+    "val_runtime": 53.6311,
+    "val_samples_per_second": 385.877,
+    "val_steps_per_second": 6.041,
+    "epoch": 2.0,
+    "test_subset_accuracy": 0.212031891761295,
+    "test_macro_f1": 0.5877836098659471,
+    "test_micro_f1": 0.6179955525561739,
+    "test_weighted_f1": 0.6191833796789665,
+    "test_macro_precision": 0.5702039757763703,
+    "test_macro_recall": 0.6119957368075706,
+    "test_hamming_loss": 0.07945098309920731,
+    "test_threshold": 0.2999999523162842,
+    "test_loss": 0.17409542202949524
+  },
+  "label_count": 21,
+  "config": {
+    "data": {
+      "source": "arrow",
+      "path": "../../T1/imdb_media_dataset",
+      "raw_path": "../original_file/movie_info.txt",
+      "encoding": "utf-8",
+      "has_header": true,
+      "columns": [
+        "id",
+        "label",
+        "name",
+        "summary"
+      ],
+      "label_column": "genres",
+      "text_column": "summary",
+      "arrow_split": "train",
+      "text_template": "{title}. {storyline}",
+      "fallback_text_fields": [
+        "presentation",
+        "title"
+      ],
+      "exclude_labels": [
+        "Short",
+        "Documentary",
+        "Adult",
+        "News",
+        "Reality-TV",
+        "Talk-Show",
+        "Game-Show"
+      ],
+      "single_label_strategy": "primary",
+      "min_label_count": 10,
+      "drop_duplicated": true,
+      "missing_text": "",
+      "limit": null,
+      "export_splits": true,
+      "export_dir": "dataset/imdb_splits",
+      "export_encoding": "utf-8"
+    },
+    "split": {
+      "test_size": 0.1,
+      "val_size": 0.1,
+      "seed": 42,
+      "stratify": true
+    },
+    "model": {
+      "pretrained_path": "../../../NLP_learn10_12/PretrainedModel/bert-base-uncased",
+      "max_length": 256,
+      "dropout": null
+    },
+    "training": {
+      "output_root": "../../model_imdb",
+      "per_device_train_batch_size": 32,
+      "per_device_eval_batch_size": 64,
+      "learning_rate": 2e-05,
+      "num_train_epochs": 2,
+      "weight_decay": 0.01,
+      "optim": "adamw_torch_fused",
+      "warmup_ratio": 0.1,
+      "max_grad_norm": 1.0,
+      "bf16": true,
+      "fp16": false,
+      "use_cpu": false,
+      "seed": 42,
+      "logging_steps": 200,
+      "eval_strategy": "epoch",
+      "save_strategy": "epoch",
+      "save_total_limit": 1,
+      "load_best_model_at_end": true,
+      "dataloader_num_workers": 0,
+      "gradient_accumulation_steps": 1,
+      "report_to": []
+    },
+    "tasks": {
+      "single": {
+        "output_dir": "single_label",
+        "metric_for_best_model": "macro_f1",
+        "greater_is_better": true,
+        "top_k": 3,
+        "threshold": 0.5
+      },
+      "multi": {
+        "output_dir": "multi_label",
+        "metric_for_best_model": "macro_f1",
+        "greater_is_better": true,
+        "top_k": 3,
+        "threshold": 0.5
+      }
+    },
+    "optimization": {
+      "output_dir": "optimized",
+      "dtypes": [
+        "fp16",
+        "bf16"
+      ],
+      "int8_dynamic": true,
+      "unstructured_ratios": [
+        0.3,
+        0.5
+      ],
+      "structured_keep_ratios": [
+        0.75,
+        0.5
+      ],
+      "low_rank_ratios": [
+        0.75,
+        0.5,
+        0.25
+      ],
+      "eval_batch_size": 64,
+      "latency_batch_size": 8,
+      "latency_samples": 512,
+      "latency_single_samples": 64,
+      "latency_rounds": 3,
+      "max_test_samples": null,
+      "report_path": "../model_imdb_optimization_report.md",
+      "results_path": "../../model_imdb/optimization_results.json"
+    },
+    "project_root": "E:\\Study\\NLPLearn\\P1\\cp\\Bert_model",
+    "config_file": "E:\\Study\\NLPLearn\\P1\\cp\\Bert_model\\config_imdb.yaml",
+    "data_path": "E:\\Study\\NLPLearn\\P1\\T1\\imdb_media_dataset",
+    "raw_data_path": "E:\\Study\\NLPLearn\\P1\\cp\\original_file\\movie_info.txt",
+    "pretrained_path": "E:\\Study\\NLPLearn\\NLP_learn10_12\\PretrainedModel\\bert-base-uncased",
+    "output_root": "E:\\Study\\NLPLearn\\P1\\model_imdb",
+    "split_export_dir": "E:\\Study\\NLPLearn\\P1\\cp\\Bert_model\\dataset\\imdb_splits",
+    "report_path": "E:\\Study\\NLPLearn\\P1\\cp\\model_imdb_optimization_report.md",
+    "results_path": "E:\\Study\\NLPLearn\\P1\\model_imdb\\optimization_results.json"
+  }
+}

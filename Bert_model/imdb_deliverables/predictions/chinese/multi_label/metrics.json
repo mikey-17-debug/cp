@@ -1,0 +1,107 @@
+{
+  "task": "multi",
+  "metrics": {
+    "val_loss": 0.1244421973824501,
+    "val_subset_accuracy": 0.18485377564382366,
+    "val_macro_f1": 0.27756670329666405,
+    "val_micro_f1": 0.5736776837224349,
+    "val_weighted_f1": 0.5456851092150855,
+    "val_macro_precision": 0.4563245114455284,
+    "val_macro_recall": 0.2289147701486194,
+    "val_hamming_loss": 0.04793515689412678,
+    "val_threshold": 0.5,
+    "val_runtime": 12.3303,
+    "val_samples_per_second": 371.605,
+    "val_steps_per_second": 5.839,
+    "epoch": 3.0,
+    "test_loss": 0.12249071151018143,
+    "test_subset_accuracy": 0.182849661793585,
+    "test_macro_f1": 0.28868271013656777,
+    "test_micro_f1": 0.5776625621084468,
+    "test_weighted_f1": 0.5507240205555545,
+    "test_macro_precision": 0.47156239127508687,
+    "test_macro_recall": 0.23625815984916387,
+    "test_hamming_loss": 0.04739738647659224,
+    "test_threshold": 0.5,
+    "test_runtime": 12.3252,
+    "test_samples_per_second": 371.839,
+    "test_steps_per_second": 5.842
+  },
+  "label_count": 36,
+  "config": {
+    "data": {
+      "path": "dataset/clean_data.txt",
+      "raw_path": "../original_file/movie_info.txt",
+      "encoding": "utf-8",
+      "has_header": true,
+      "columns": [
+        "id",
+        "label",
+        "name",
+        "summary"
+      ],
+      "label_column": "label",
+      "text_column": "summary",
+      "min_label_count": 10,
+      "drop_duplicated": true,
+      "missing_text": "",
+      "limit": null
+    },
+    "split": {
+      "test_size": 0.1,
+      "val_size": 0.1,
+      "seed": 42,
+      "stratify": true
+    },
+    "model": {
+      "pretrained_path": "../../../NLP_learn10_12/PretrainedModel/chinese-bert-wwm",
+      "max_length": 256,
+      "dropout": null
+    },
+    "training": {
+      "output_root": "../../model",
+      "per_device_train_batch_size": 32,
+      "per_device_eval_batch_size": 64,
+      "learning_rate": 2e-05,
+      "num_train_epochs": 3,
+      "weight_decay": 0.01,
+      "optim": "adamw_torch_fused",
+      "warmup_ratio": 0.1,
+      "max_grad_norm": 1.0,
+      "bf16": true,
+      "fp16": false,
+      "use_cpu": false,
+      "seed": 42,
+      "logging_steps": 50,
+      "eval_strategy": "epoch",
+      "save_strategy": "epoch",
+      "save_total_limit": 1,
+      "load_best_model_at_end": true,
+      "dataloader_num_workers": 0,
+      "gradient_accumulation_steps": 1,
+      "report_to": []
+    },
+    "tasks": {
+      "single": {
+        "output_dir": "single_label",
+        "metric_for_best_model": "macro_f1",
+        "greater_is_better": true,
+        "top_k": 3,
+        "threshold": 0.5
+      },
+      "multi": {
+        "output_dir": "multi_label",
+        "metric_for_best_model": "macro_f1",
+        "greater_is_better": true,
+        "top_k": 3,
+        "threshold": 0.5
+      }
+    },
+    "project_root": "E:\\Study\\NLPLearn\\P1\\cp\\Bert_model",
+    "config_file": "E:\\Study\\NLPLearn\\P1\\cp\\Bert_model\\config.yaml",
+    "data_path": "E:\\Study\\NLPLearn\\P1\\cp\\Bert_model\\dataset\\clean_data.txt",
+    "raw_data_path": "E:\\Study\\NLPLearn\\P1\\cp\\original_file\\movie_info.txt",
+    "pretrained_path": "E:\\Study\\NLPLearn\\NLP_learn10_12\\PretrainedModel\\chinese-bert-wwm",
+    "output_root": "E:\\Study\\NLPLearn\\P1\\model"
+  }
+}

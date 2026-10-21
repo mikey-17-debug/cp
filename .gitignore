@@ -1,1 +1,7 @@
 .idea
+__pycache__/
+*.pyc
+*.log
+# 训练时导出的数据切分（体积大且可由代码复现；超 100MB 的文件另见 imdb_deliverables/large_files）
+Bert_model/dataset/imdb_splits/
+Bert_model/dataset/splits/

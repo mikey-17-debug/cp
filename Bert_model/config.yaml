@@ -1,0 +1,125 @@
+# =====================================================================
+# 电影类型分类（chinese-bert-wwm）训练配置
+# 说明：
+#   * 所有相对路径都以本文件所在目录（项目根目录）为基准解析
+#   * 换数据 / 换预训练模型 / 换输出目录，只改这里，不用改代码
+#   * 命令行可临时覆盖：python main.py train --help
+# =====================================================================
+
+data:
+  # 训练数据（唯一数据源），相对项目根目录
+  path: "dataset/clean_data.txt"
+  encoding: "utf-8"
+  # 原始数据（data_clean.py 清洗用）
+  raw_path: "../original_file/movie_info.txt"
+  has_header: true
+  # 数据文件列顺序：索引列 + 类型列 + 片名列 + 摘要列
+  columns: ["id", "label", "name", "summary"]
+  label_column: "label"
+  # 送入模型的文本字段（此处仅用剧情简介 summary）
+  text_column: "summary"
+  # 出现次数低于该值的类型直接剔除（低频类型无法学习，也会拖累指标）
+  min_label_count: 10
+  # 丢弃完全相同的 (文本, 标签) 重复样本
+  drop_duplicated: true
+  # 空文本占位符
+  missing_text: ""
+  # 调试用：仅使用前 N 条原始样本（null 表示不限制）
+  limit: null
+  # 把实际参与训练/验证/测试的样本写回磁盘（每个任务一个子目录）
+  export_splits: true
+  export_dir: "dataset/splits"
+  # utf-8-sig 便于 Excel 直接打开中文
+  export_encoding: "utf-8-sig"
+
+split:
+  # 测试集比例
+  test_size: 0.1
+  # 验证集比例（占切分掉测试集之后剩余部分）
+  val_size: 0.1
+  seed: 42
+  # 按主类型分层抽样（失败时自动退回随机切分）
+  stratify: true
+
+model:
+  # 预训练模型目录，相对项目根目录
+  pretrained_path: "../../../NLP_learn10_12/PretrainedModel/chinese-bert-wwm"
+  # 最大序列长度（超出截断）；8GB 显存下 256 足够且安全
+  max_length: 256
+  # 覆盖预训练模型的 dropout 概率（null 表示沿用预训练配置）
+  dropout: null
+
+training:
+  # 输出根目录，相对项目根目录；模型实际保存到 <output_root>/<tasks.*.output_dir>
+  output_root: "../../model"
+  # batch 越大 GPU 利用率越高；8GB 显存下 32 / 序列 256 安全
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 64
+  learning_rate: 2.0e-5
+  num_train_epochs: 3
+  weight_decay: 0.01
+  # 融合优化器（单步更新更快，可提升 GPU 利用率）
+  optim: "adamw_torch_fused"
+  # 学习率预热步数占比
+  warmup_ratio: 0.1
+  max_grad_norm: 1.0
+  # RTX 40 系原生支持 bf16，比 fp16 更稳（fp16 与 BCE 损失易溢出）
+  bf16: true
+  fp16: false
+  use_cpu: false
+  seed: 42
+  logging_steps: 50
+  eval_strategy: "epoch"
+  save_strategy: "epoch"
+  save_total_limit: 1
+  load_best_model_at_end: true
+  dataloader_num_workers: 0
+  gradient_accumulation_steps: 1
+  # 关闭外部实验追踪（留空数组）
+  report_to: []
+
+tasks:
+  # ---- 单标签：一个样本只预测一个结果 ----
+  # 原数据中一条影片带多个类型时，按类型展开成多条「相同摘要 + 不同标签」的样本
+  single:
+    output_dir: "single_label"
+    metric_for_best_model: "macro_f1"
+    greater_is_better: true
+    # 推理输出展示的 Top-K
+    top_k: 3
+  # ---- 多标签：一个样本可同时预测多个结果 ----
+  multi:
+    output_dir: "multi_label"
+    metric_for_best_model: "macro_f1"
+    greater_is_better: true
+    # 概率阈值：>= 阈值判定为该类型
+    threshold: 0.5
+
+# =====================================================================
+# 模型压缩实验：量化 / 剪枝 / 低秩分解
+# =====================================================================
+optimization:
+  # 压缩产物目录，相对各任务的模型目录，即 model/<task>/<output_dir>/
+  output_dir: "optimized"
+  # 半精度量化（GPU 推理）
+  dtypes: ["fp16", "bf16"]
+  # 动态 INT8 量化（Linear 层，CPU 推理）
+  int8_dynamic: true
+  # 非结构化幅度剪枝：权重置零比例
+  unstructured_ratios: [0.3, 0.5]
+  # 结构化剪枝：FFN 中间层保留比例（真正裁剪张量，体积会下降）
+  structured_keep_ratios: [0.75, 0.5]
+  # 低秩分解：秩占 min(in, out) 的比例
+  low_rank_ratios: [0.75, 0.5, 0.25]
+  # 精度评估与延迟测量的批大小
+  eval_batch_size: 64
+  latency_batch_size: 8
+  latency_samples: 512
+  # CPU 单条延迟测试样本数（批大小 1）
+  latency_single_samples: 64
+  latency_rounds: 3
+  # 调试用：限制测试样本数（null 表示全量）
+  max_test_samples: null
+  # 报告与结果文件，相对项目根目录
+  report_path: "../model_optimization_report.md"
+  results_path: "../../model/optimization_results.json"
