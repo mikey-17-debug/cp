@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影视简介分类预测</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #e0f2fe 100%);
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin: 0 0 6px;
+            text-align: center;
+            color: #1e3a8a;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        /* ---------- 查询区 ---------- */
+        .panel {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 6px 24px rgba(30, 58, 138, .08);
+            margin-bottom: 28px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 10px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        #text {
+            flex: 1;
+            height: 46px;
+            padding: 0 16px;
+            font-size: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        #text:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
+        }
+
+        #searchBtn {
+            height: 46px;
+            padding: 0 32px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity .2s, transform .1s;
+        }
+
+        #searchBtn:hover:not(:disabled) {
+            opacity: .9;
+        }
+
+        #searchBtn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        #searchBtn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .tip {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 10px;
+            min-height: 18px;
+        }
+
+        .tip.warn {
+            color: #ef4444;
+        }
+
+        /* ---------- 结果区 ---------- */
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #475569;
+            margin: 0 0 14px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 6px 24px rgba(30, 58, 138, .08);
+            border-left: 4px solid #cbd5e1;
+            transition: border-color .25s, box-shadow .25s;
+        }
+
+        .card.loading {
+            border-left-color: #f59e0b;
+        }
+
+        .card.success {
+            border-left-color: #10b981;
+            box-shadow: 0 6px 24px rgba(16, 185, 129, .16);
+        }
+
+        .card.error {
+            border-left-color: #ef4444;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .algo-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .status {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: #64748b;
+            white-space: nowrap;
+        }
+
+        .status.loading {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .result-main {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4f46e5;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .card.error .result-main {
+            font-size: 14px;
+            font-weight: 500;
+            color: #dc2626;
+        }
+
+        .card.loading .result-main {
+            font-size: 15px;
+            font-weight: 500;
+            color: #b45309;
+        }
+
+        .card.idle .result-main {
+            font-size: 15px;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .result-sub {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #64748b;
+            word-break: break-all;
+        }
+
+        /* ================= 查询历史（新增） ================= */
+        .history-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        #clearHistoryBtn {
+            font-size: 13px;
+            padding: 5px 14px;
+            color: #64748b;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: color .2s, background .2s, border-color .2s;
+        }
+
+        #clearHistoryBtn:hover:not(:disabled) {
+            color: #b91c1c;
+            background: #fee2e2;
+            border-color: #fecaca;
+        }
+
+        #clearHistoryBtn:disabled {
+            cursor: not-allowed;
+            opacity: .5;
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .history-empty {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .history-item {
+            max-width: 320px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-family: inherit;
+            color: #334155;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color .2s, background .2s, border-color .2s;
+        }
+
+        .history-item:hover {
+            color: #4f46e5;
+            background: #eef2ff;
+            border-color: #c7d2fe;
+        }
+
+        /* ================= 历史面板 折叠/展开（新增） ================= */
+        .history-head {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .history-head .title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 折叠箭头 */
+        .history-toggle-arrow {
+            display: inline-block;
+            font-size: 12px;
+            color: #64748b;
+            transition: transform .25s ease;
+        }
+
+        /* 折叠时箭头旋转 -90° */
+        .history-panel.collapsed .history-toggle-arrow {
+            transform: rotate(-90deg);
+        }
+
+        /* 折叠时隐藏列表 */
+        .history-panel.collapsed .history-list {
+            display: none;
+        }
+
+        /* 折叠时减小底部间距 */
+        .history-panel.collapsed {
+            padding-bottom: 18px;
+        }
+
+        /* 让右侧按钮组横向排列（清空 + 折叠箭头可以并排，也可以只保留清空） */
+        .history-head .head-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>影视简介分类预测</h1>
+    <p class="subtitle">输入一段影视简介，查看各分类算法的预测结果</p>
+
+    <!-- 查询区 -->
+    <div class="panel">
+        <label class="field-label" for="text">影视简介</label>
+        <div class="input-row">
+            <input id="text" type="text" placeholder="请输入影视简介"
+                   autocomplete="off">
+            <button id="searchBtn" type="button">查 询</button>
+        </div>
+        <div class="tip" id="tip">按 Enter 键也可以直接查询</div>
+    </div>
+    <!-- ================= 查询历史（含折叠/展开） ================= -->
+    <div class="panel history-panel" id="historyPanel">
+        <div class="history-head" id="historyHead">
+            <div class="title-wrap">
+                <span class="history-toggle-arrow">▼</span>
+                <p class="section-title" style="margin:0">查询历史</p>
+                <span class="history-count" id="historyCount" style="font-size:13px;color:#94a3b8;"></span>
+            </div>
+            <div class="head-actions">
+                <button id="clearHistoryBtn" type="button">清空历史</button>
+            </div>
+        </div>
+        <div class="history-list" id="historyList"></div>
+    </div>
+    <!-- 结果区 -->
+    <p class="section-title">分类结果（共 <span id="algoCount">0</span> 个算法）</p>
+    <div class="result-grid" id="resultGrid"></div>
+
+</div>
+
+<script>
+    /* ============================================================
+     * 1. 分类算法列表：需要新增算法时，在这里加一项即可
+     * ============================================================ */
+    const ALGORITHMS = [
+        {key: 'rf', name: '随机森林', url: '/api/rf/predict'},
+        {key: 'fasttext', name: 'fasttext', url: '/api/fasttext/predict'},
+        {key: 'bert', name: 'bert', url: '/api/bert/predict'},
+        {key: 'llm', name: '大模型', url: '/api/llm/predict'},
+    ];
+
+    /* 后端接口地址：Blueprint url_prefix='/api' + rule='/predict' */
+    const API_URL = '/api/predict';
+
+    /* ============================================================
+     * 2. DOM
+     * ============================================================ */
+    const textInput = document.getElementById('text');
+    const searchBtn = document.getElementById('searchBtn');
+    const tipEl = document.getElementById('tip');
+    const gridEl = document.getElementById('resultGrid');
+    document.getElementById('algoCount').textContent = ALGORITHMS.length;
+
+    /* ============================================================
+     * 3. 初始化：为每个算法渲染一张结果卡片
+     * ============================================================ */
+    function renderCards() {
+        gridEl.innerHTML = ALGORITHMS.map(a => `
+    <div class="card idle" id="card-${a.key}">
+      <div class="card-head">
+        <span class="algo-name">${escapeHtml(a.name)}</span>
+        <span class="status" data-status>待查询</span>
+      </div>
+      <div class="result-main" data-main>—</div>
+      <div class="result-sub" data-sub></div>
+    </div>
+  `).join('');
+    }
+
+    /* 更新单张卡片：state = idle | loading | success | error */
+    function setCard(key, state, main, sub) {
+        const card = document.getElementById('card-' + key);
+        if (!card) return;
+        const statusEl = card.querySelector('[data-status]');
+        const mainEl = card.querySelector('[data-main]');
+        const subEl = card.querySelector('[data-sub]');
+
+        card.className = 'card ' + state;
+
+        const statusText = {idle: '待查询', loading: '查询中…', success: '成功', error: '失败'};
+        statusEl.textContent = statusText[state] || '';
+        statusEl.className = 'status ' + (state === 'idle' ? '' : state);
+
+        mainEl.textContent = main ?? '—';
+        subEl.textContent = sub ?? '';
+    }
+
+    /* ============================================================
+     * 4. 请求后端（每个算法各发一次请求）
+     * ============================================================ */
+    async function predictOne(text, algo) {
+        const resp = await fetch(algo.url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            // 若后端只认 text，多传的 algorithm / algo_name 会被忽略，不影响调用
+            body: JSON.stringify({text: text, algorithm: algo.key, algo_name: algo.name})
+        });
+
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+        const json = await resp.json();
+
+        // 接口约定：{ code: "SUCCESS" | "FAIL", result: "...", data: ... }
+        if (json.code !== 'SUCCESS') {
+            throw new Error(json.result || '接口返回失败');
+        }
+        return json.data;
+    }
+
+    /* ============================================================
+     * 5. 将后端返回的 data 格式化为 { main, sub }
+     *    重点：分类结果取 data.pred_class 字段
+     * ============================================================ */
+    function formatResult(data) {
+        if (data === null || data === undefined) return {main: '—', sub: ''};
+
+        // 如果 data 不是对象，直接转为字符串展示
+        if (typeof data !== 'object') return {main: String(data), sub: ''};
+
+        // 优先取 pred_class 作为分类结果
+        const main = data.pred_class ?? data.label ?? data.class ?? data.result ?? '—';
+
+        // 副信息：耗时、原文本
+        const subs = [];
+        if (data.duration !== undefined && data.duration !== null) {
+            subs.push('耗时：' + data.duration + 'ms');
+        }
+        if (data.text) {
+            subs.push('文本：' + data.text);
+        }
+
+        return {main: String(main), sub: subs.join('　')};
+    }
+
+    /* ============================================================
+     * 6. 查询主流程
+     * ============================================================ */
+    /* ================= 查询历史（新增） ================= */
+    const HISTORY_KEY = 'news_predict_history';
+    const MAX_HISTORY = 20;
+    const COLLAPSE_KEY = 'news_predict_history_collapsed';   // 折叠状态持久化
+    let historyCollapsed = loadCollapseState();
+
+    function loadCollapseState() {
+        try {
+            return localStorage.getItem(COLLAPSE_KEY) === '1';
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function saveCollapseState() {
+        try {
+            localStorage.setItem(COLLAPSE_KEY, historyCollapsed ? '1' : '0');
+        } catch (e) {
+        }
+    }
+
+    let historyItems = loadHistory();
+
+    /* 读取本地历史（localStorage 不可用时降级为空数组） */
+    function loadHistory() {
+        try {
+            const raw = localStorage.getItem(HISTORY_KEY);
+            const arr = raw ? JSON.parse(raw) : [];
+            return Array.isArray(arr) ? arr.filter(x => typeof x === 'string') : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveHistory() {
+        try {
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(historyItems));
+        } catch (e) { /* 隐私模式等场景忽略 */
+        }
+    }
+
+    /* 新增一条记录：去重 + 置顶 + 限长 */
+    function addHistory(text) {
+        const t = String(text).trim();
+        if (!t) return;
+        const idx = historyItems.indexOf(t);
+        if (idx !== -1) historyItems.splice(idx, 1);
+        historyItems.unshift(t);
+        if (historyItems.length > MAX_HISTORY) historyItems.length = MAX_HISTORY;
+        saveHistory();
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const countEl = document.getElementById('historyCount');
+        if (countEl) countEl.textContent = historyItems.length ? `(${historyItems.length})` : '';
+        const box = document.getElementById('historyList');
+        const clearBtn = document.getElementById('clearHistoryBtn');
+        if (!box) return;
+
+        clearBtn.disabled = historyItems.length === 0;
+
+        if (!historyItems.length) {
+            box.innerHTML = '<span class="history-empty">暂无查询记录</span>';
+            return;
+        }
+
+        box.innerHTML = historyItems.map(t => `
+    <button type="button" class="history-item"
+            data-text="${escapeHtml(t)}"
+            title="${escapeHtml(t)}">${escapeHtml(t)}</button>
+  `).join('');
+    }
+
+    /* 应用折叠/展开状态到 DOM */
+    function applyCollapseState() {
+        const panel = document.getElementById('historyPanel');
+        if (!panel) return;
+        panel.classList.toggle('collapsed', historyCollapsed);
+    }
+
+    /* 切换折叠 */
+    function toggleHistory() {
+        historyCollapsed = !historyCollapsed;
+        saveCollapseState();
+        applyCollapseState();
+    }
+
+    /* 点击历史项：回填输入框并直接查询 */
+    document.getElementById('historyList').addEventListener('click', (e) => {
+        const item = e.target.closest('.history-item');
+        if (!item) return;
+        textInput.value = item.dataset.text;
+        handleSearch();
+    });
+
+    /* 清空历史 */
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+        if (!historyItems.length) return;
+        historyItems = [];
+        saveHistory();
+        renderHistory();
+    });
+    /* 点击头部：切换折叠；点击清空按钮时不触发折叠 */
+    document.getElementById('historyHead').addEventListener('click', (e) => {
+        // 如果点到的是"清空历史"按钮，不折叠
+        if (e.target.closest('#clearHistoryBtn')) return;
+        toggleHistory();
+    });
+    /* 首次进入页面渲染历史 */
+    renderHistory();
+    applyCollapseState();   // ★ 新增：恢复上次折叠状态
+    async function handleSearch() {
+        const text = textInput.value.trim();
+
+        if (!text) {
+            tipEl.textContent = '请先输入影视简介！';
+            tipEl.classList.add('warn');
+            textInput.focus();
+            return;
+        }
+        addHistory(text); // ★ 新增：记录本次查询的标题
+        tipEl.textContent = '查询中，请稍候…';
+        tipEl.classList.remove('warn');
+
+        searchBtn.disabled = true;
+        textInput.disabled = true;
+
+        // 先把所有卡片置为「查询中」
+        ALGORITHMS.forEach(a => setCard(a.key, 'loading', '查询中…', ''));
+
+        // 并发请求，各算法互不影响
+        const tasks = ALGORITHMS.map(async (algo) => {
+            try {
+                const data = await predictOne(text, algo);
+                const {main, sub} = formatResult(data);
+                setCard(algo.key, 'success', main, sub);
+            } catch (err) {
+                setCard(algo.key, 'error', err.message || '请求失败', '');
+            }
+        });
+
+        await Promise.all(tasks);
+
+        searchBtn.disabled = false;
+        textInput.disabled = false;
+        tipEl.textContent = '查询完成，可修改标题后重新查询';
+    }
+
+    /* ============================================================
+     * 7. 事件绑定
+     * ============================================================ */
+    searchBtn.addEventListener('click', handleSearch);
+    textInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleSearch();
+    });
+
+    /* 简单转义，避免算法名称里的特殊字符破坏 HTML */
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, s => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[s]));
+    }
+
+    /* 页面初始化 */
+    renderCards();
+</script>
+</body>
+</html>
