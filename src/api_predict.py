@@ -2,10 +2,10 @@ import json
 
 from flask import request, Blueprint
 
-from src.fasttext.fasttext_predict import ft_predict as rf_p
+from src.rf.rf_predict import predict as rf_p
 from src.fasttext.fasttext_predict import ft_predict as fasttext_p
-from src.fasttext.fasttext_predict import ft_predict as bert_p
-from src.fasttext.fasttext_predict import ft_predict as llm_p
+from src.bert.predict_genre import predict as bert_p
+from src.llm.predict import predict as llm_p
 
 predict_bp = Blueprint('predict', __name__, url_prefix='/api')
 @predict_bp .route(rule='/rf/predict', methods=['GET', 'POST'])
